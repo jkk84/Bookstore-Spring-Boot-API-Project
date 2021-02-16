@@ -21,5 +21,4 @@ public class RestapiApplication {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("pl.bookstore.restapi")).build();
 	}
-
 }

@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.0'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'org.springframework.boot' version '2.4.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
 
@@ -32,23 +32,4 @@ dependencies {
 
 test {
 	useJUnitPlatform()
-}
-
-task generatePostsAndComments() {
-	doLast {
-		File dataSql = file("src/main/resources/data.sql")
-		dataSql.write("")
-		// books
-		for (int i = 1; i <= 100; i++) {
-			dataSql.append("insert into book(isbn, title, description, publication_date, edition, price, author) " +
-					"values ('${i}', 'Title ${i}', 'Description ${i}', 2020, '${i}', ${i*1.01}, 'Author ${i}');\n")
-		}
-
-		// comments
-		for (int i = 1; i <= 100; i++) {
-			int bookIsbn = 1 + i / 10
-			dataSql.append("insert into comment(id, book_isbn, content, created) " +
-					"values (${i}, ${bookIsbn}, 'Comment ${i}', '" + LocalDateTime.now().minusDays(100 - i) + "');\n")
-		}
-	}
 }
