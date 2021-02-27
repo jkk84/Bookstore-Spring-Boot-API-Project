@@ -30,7 +30,9 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
-        return ResponseEntity.ok(bookService.addBook(bookDto));
+        return bookService.addBook(bookDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping

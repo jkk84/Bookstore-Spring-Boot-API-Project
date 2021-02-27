@@ -12,7 +12,7 @@ public interface BookService {
 
     Optional<BookDto> getBook(long bookId);
 
-    BookDto addBook(BookDto bookDto);
+    Optional<BookDto> addBook(BookDto bookDto);
 
     Optional<BookDto> updateBook(BookDto bookDto, long bookId);
 

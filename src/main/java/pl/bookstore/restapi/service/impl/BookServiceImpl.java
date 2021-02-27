@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto addBook(BookDto bookDto) {
+    public Optional<BookDto> addBook(BookDto bookDto) {
         BookEntity bookEntity = bookMapper.toEntity(bookDto);
         Set<AuthorEntity> authorEntities = Set.copyOf(authorRepository
                 .findAllById(bookDto.getAuthorIds()));
@@ -51,36 +51,34 @@ public class BookServiceImpl implements BookService {
 
         if(bookDto.getAuthorIds().size() == authorEntities.size()
                 && bookDto.getCategoryIds().size() == categoryEntities.size()
-                && ((bookDto.getAuthorIds().size() > 0) && (bookDto.getCategoryIds().size() > 0))) {
+                && ((bookDto.getAuthorIds().size() > 0)
+                && (bookDto.getCategoryIds().size() > 0))) {
             bookRepository.save(bookEntity);
-            return bookMapper.toDto(bookEntity);
+            return Optional.of(bookMapper.toDto(bookEntity));
         }
-        return bookDto;
+        return Optional.empty();
     }
 
     @Override
     public Optional<BookDto> updateBook(BookDto bookDto, long bookId) {
+         BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(Const.BOOK, bookId));
+        BookEntity bookEntity = bookMapper.toEntity(bookDto);
+        bookEntity.setBookId(bookId);
+        bookEntity.setCreatedAt(book.getCreatedAt());
         Set<AuthorEntity> authorEntities = Set.copyOf(authorRepository
                 .findAllById(bookDto.getAuthorIds()));
         Set<CategoryEntity> categoryEntities = Set.copyOf(categoryRepository
                 .findAllById(bookDto.getCategoryIds()));
 
-        System.out.println(bookDto.getAuthorIds());
-        System.out.println(bookDto.getCategoryIds());
-
-            return Optional.of(bookMapper.toDto(bookRepository.findById(bookId)
-                    .map(book -> {
-                        book.setIsbn(bookDto.getIsbn());
-                        book.setTitle(bookDto.getTitle());
-                        book.setDescription(bookDto.getDescription());
-                        book.setPrice(bookDto.getPrice());
-                        book.setImageUrl(bookDto.getImageUrl());
-                        book.setAuthorEntities(authorEntities);
-                        book.setCategoryEntities(categoryEntities);
-                        bookRepository.saveAndFlush(book);
-                        return book;
-                    })
-                    .orElseThrow(() -> new NotFoundException(Const.BOOK, bookId))));
+        if(bookDto.getAuthorIds().size() == authorEntities.size()
+                && bookDto.getCategoryIds().size() == categoryEntities.size()
+                && ((bookDto.getAuthorIds().size() > 0)
+                && (bookDto.getCategoryIds().size() > 0))) {
+            bookRepository.save(bookEntity);
+            return Optional.of(bookMapper.toDto(bookEntity));
+        }
+        return Optional.empty();
     }
 
     @Override

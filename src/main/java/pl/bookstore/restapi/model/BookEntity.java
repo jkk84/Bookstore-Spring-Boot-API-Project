@@ -37,12 +37,12 @@ public class BookEntity {
 
     private String imageUrl;
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @ManyToMany
     @JoinTable(name="books_authors", joinColumns = @JoinColumn(name = "books_bookId"),
             inverseJoinColumns = @JoinColumn(name = "authors_authorId"))
     private Set<AuthorEntity> authorEntities;
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @ManyToMany
     @JoinTable(name="books_categories", joinColumns = @JoinColumn(name = "books_bookId"),
             inverseJoinColumns = @JoinColumn(name = "categories_authorId"))
     private Set<CategoryEntity> categoryEntities;
