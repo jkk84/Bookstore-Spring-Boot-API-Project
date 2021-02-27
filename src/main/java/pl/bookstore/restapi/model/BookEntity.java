@@ -1,5 +1,6 @@
 package pl.bookstore.restapi.model;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,7 +8,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 
 @Entity
 @Getter
@@ -33,9 +37,13 @@ public class BookEntity {
 
     private String imageUrl;
 
-    // FK
-    private long authorId;
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @JoinTable(name="books_authors", joinColumns = @JoinColumn(name = "books_bookId"),
+            inverseJoinColumns = @JoinColumn(name = "authors_authorId"))
+    private Set<AuthorEntity> authorEntities;
 
-    // FK
-    private long categoryId;
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @JoinTable(name="books_categories", joinColumns = @JoinColumn(name = "books_bookId"),
+            inverseJoinColumns = @JoinColumn(name = "categories_authorId"))
+    private Set<CategoryEntity> categoryEntities;
 }

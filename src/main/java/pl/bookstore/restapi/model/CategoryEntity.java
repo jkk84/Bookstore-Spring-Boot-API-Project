@@ -10,16 +10,12 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "authors")
-public class AuthorEntity {
+@Table(name = "categories")
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long authorId;
+    private long categoryId;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String biography;
+    private String name;
 }

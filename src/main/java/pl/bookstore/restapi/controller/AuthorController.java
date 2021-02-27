@@ -36,7 +36,8 @@ public class AuthorController {
     }
 
     @PutMapping
-    public ResponseEntity<AuthorEntity> updateAuthor(@RequestBody AuthorEntity authorEntity, @RequestParam long authorId) {
+    public ResponseEntity<AuthorEntity> updateAuthor
+            (@RequestBody AuthorEntity authorEntity, @RequestParam long authorId) {
         return authorService.updateAuthor(authorEntity, authorId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

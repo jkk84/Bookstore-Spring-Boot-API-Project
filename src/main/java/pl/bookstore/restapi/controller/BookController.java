@@ -1,27 +1,50 @@
 package pl.bookstore.restapi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import pl.bookstore.restapi.model.BookEntity;
-import pl.bookstore.restapi.service.impl.BookServiceImpl;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pl.bookstore.restapi.model.dto.BookDto;
+import pl.bookstore.restapi.service.BookService;
 
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/books")
 public class BookController {
 
-    private final BookServiceImpl bookService;
+    private final BookService bookService;
 
-    @GetMapping("/books")
-    public List<BookEntity> getBooks() {
-        return bookService.getBooks();
+    @GetMapping
+    public List<BookDto> getAllBooks() {
+        return bookService.getAllBooks();
     }
 
-    @GetMapping("/books/{book}")
-    public BookEntity getSingleBook(@PathVariable long bookId) {
-        return bookService.getSingleBook(bookId);
+    @GetMapping(params = {"bookId"})
+    public ResponseEntity<BookDto> getBook(@RequestParam long bookId) {
+        return bookService.getBook(bookId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
+        return ResponseEntity.ok(bookService.addBook(bookDto));
+    }
+
+    @PutMapping
+    public ResponseEntity<BookDto> updateBook
+            (@RequestBody BookDto bookDto, @RequestParam long bookId) {
+        return bookService.updateBook(bookDto, bookId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteBook(@RequestParam long bookId) {
+        return bookService.deleteBook(bookId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
