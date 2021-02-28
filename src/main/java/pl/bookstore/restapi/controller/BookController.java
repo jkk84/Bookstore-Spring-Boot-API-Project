@@ -28,6 +28,11 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping(params = {"authorIds", "categoryIds"})
+    public List<BookDto> getBooksByAuthorsAndCategories(@RequestParam List<Long> authorIds, @RequestParam List<Long> categoryIds) {
+        return bookService.getBooksByAuthorsAndCategories(authorIds, categoryIds);
+    }
+
     @PostMapping
     public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
         return bookService.addBook(bookDto)

@@ -12,6 +12,8 @@ public interface BookService {
 
     Optional<BookDto> getBook(long bookId);
 
+    List<BookDto> getBooksByAuthorsAndCategories(List<Long> authorIds, List<Long> categoryIds);
+
     Optional<BookDto> addBook(BookDto bookDto);
 
     Optional<BookDto> updateBook(BookDto bookDto, long bookId);

@@ -18,7 +18,6 @@ import pl.bookstore.restapi.util.Deleted;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -39,6 +38,21 @@ public class BookServiceImpl implements BookService {
     public Optional<BookDto> getBook(long bookId) {
         return Optional.of(bookMapper.toDto(bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(Const.BOOK, bookId))));
+    }
+
+    @Override
+    public List<BookDto> getBooksByAuthorsAndCategories(List<Long> authorIds, List<Long> categoryIds) {
+        List<AuthorEntity> authorEntities;
+        if (authorIds.size() > 0) {
+            authorEntities = authorRepository.findAllById(authorIds);
+        } else { authorEntities = authorRepository.findAll(); }
+
+        List<CategoryEntity> categoryEntities;
+        if(categoryIds.size() > 0) {
+            categoryEntities = categoryRepository.findAllById(categoryIds);
+        } else { categoryEntities = categoryRepository.findAll(); }
+
+        return bookMapper.toDtos(bookRepository.findDistinctByAuthorEntitiesIsInAndCategoryEntitiesIsIn(authorEntities, categoryEntities));
     }
 
     @Override
