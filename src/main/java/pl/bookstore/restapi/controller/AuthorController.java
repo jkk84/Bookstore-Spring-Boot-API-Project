@@ -1,14 +1,12 @@
 package pl.bookstore.restapi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.bookstore.restapi.model.AuthorEntity;
 import pl.bookstore.restapi.service.AuthorService;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController

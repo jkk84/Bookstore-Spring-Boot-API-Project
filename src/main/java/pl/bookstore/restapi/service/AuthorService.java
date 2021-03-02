@@ -5,6 +5,7 @@ import pl.bookstore.restapi.model.AuthorEntity;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface AuthorService {
 
     List<AuthorEntity> getAllAuthors();

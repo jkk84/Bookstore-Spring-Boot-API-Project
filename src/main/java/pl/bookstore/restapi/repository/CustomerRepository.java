@@ -2,10 +2,10 @@ package pl.bookstore.restapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pl.bookstore.restapi.model.CategoryEntity;
+import pl.bookstore.restapi.model.CustomerEntity;
 
 
 @Repository
-public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
+public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
 
 }

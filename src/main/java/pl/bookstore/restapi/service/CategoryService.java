@@ -5,6 +5,7 @@ import pl.bookstore.restapi.model.CategoryEntity;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface CategoryService {
 
     List<CategoryEntity> getAllCategories();
