@@ -18,5 +18,5 @@ public interface BookService {
 
     Optional<BookDto> updateBook(BookDto bookDto, long bookId);
 
-    Optional<String> deleteBook(long bookId);
+    void deleteBook(long bookId);
 }

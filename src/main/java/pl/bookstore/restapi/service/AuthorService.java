@@ -16,5 +16,5 @@ public interface AuthorService {
 
     Optional<AuthorEntity> updateAuthor(AuthorEntity authorEntity, long authorId);
 
-    Optional<String> deleteAuthor(long authorId);
+    void deleteAuthor(long authorId);
 }

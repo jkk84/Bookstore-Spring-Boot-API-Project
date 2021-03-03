@@ -2,7 +2,7 @@ package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.NotFoundException;
+import pl.bookstore.restapi.exception.BookNotFoundException;
 import pl.bookstore.restapi.mapper.BookMapper;
 import pl.bookstore.restapi.model.AuthorEntity;
 import pl.bookstore.restapi.model.BookEntity;
@@ -12,8 +12,6 @@ import pl.bookstore.restapi.repository.AuthorRepository;
 import pl.bookstore.restapi.repository.BookRepository;
 import pl.bookstore.restapi.repository.CategoryRepository;
 import pl.bookstore.restapi.service.BookService;
-import pl.bookstore.restapi.util.Const;
-import pl.bookstore.restapi.util.Deleted;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +35,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<BookDto> getBook(long bookId) {
         return Optional.of(bookMapper.toDto(bookRepository.findById(bookId)
-                .orElseThrow(() -> new NotFoundException(Const.BOOK, bookId))));
+                .orElseThrow(() -> new BookNotFoundException(bookId))));
     }
 
     @Override
@@ -52,7 +50,8 @@ public class BookServiceImpl implements BookService {
             categoryEntities = categoryRepository.findAllById(categoryIds);
         } else { categoryEntities = categoryRepository.findAll(); }
 
-        return bookMapper.toDtos(bookRepository.findDistinctByAuthorEntitiesIsInAndCategoryEntitiesIsIn(authorEntities, categoryEntities));
+        return bookMapper.toDtos(bookRepository
+                .findDistinctByAuthorEntitiesIsInAndCategoryEntitiesIsIn(authorEntities, categoryEntities));
     }
 
     @Override
@@ -76,7 +75,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<BookDto> updateBook(BookDto bookDto, long bookId) {
          BookEntity book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new NotFoundException(Const.BOOK, bookId));
+                .orElseThrow(() -> new BookNotFoundException(bookId));
         BookEntity bookEntity = bookMapper.toEntity(bookDto);
         bookEntity.setBookId(bookId);
         bookEntity.setCreatedAt(book.getCreatedAt());
@@ -96,9 +95,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<String> deleteBook(long bookId) {
-        bookRepository.delete(bookRepository.findById(bookId)
-        .orElseThrow(() -> new NotFoundException(Const.BOOK, bookId)));
-        return Optional.of(Deleted.msg(Const.BOOK, bookId));
+    public void deleteBook(long bookId) {
+        try {
+            bookRepository.deleteById(bookId);
+        } catch (Exception e){
+           throw new BookNotFoundException(bookId);
+        }
     }
 }

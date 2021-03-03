@@ -1,13 +1,13 @@
 package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.NotFoundException;
-import pl.bookstore.restapi.util.Const;
+import org.springframework.web.server.ResponseStatusException;
+import pl.bookstore.restapi.exception.AuthorNotFoundException;
 import pl.bookstore.restapi.model.AuthorEntity;
 import pl.bookstore.restapi.repository.AuthorRepository;
 import pl.bookstore.restapi.service.AuthorService;
-import pl.bookstore.restapi.util.Deleted;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Optional<AuthorEntity> getAuthor(long authorId) {
         AuthorEntity authorEntity = authorRepository.findById(authorId)
-                .orElseThrow(() -> new NotFoundException(Const.AUTHOR, authorId));
+                .orElseThrow(() -> new AuthorNotFoundException(authorId));
         return Optional.of(authorEntity);
     }
 
@@ -45,14 +45,19 @@ public class AuthorServiceImpl implements AuthorService {
                     author.setBiography(authorEntity.getBiography());
                     return authorRepository.save(author);
                 })
-                .orElseThrow(() -> new NotFoundException(Const.AUTHOR, authorId)));
+                .orElseThrow(() -> new AuthorNotFoundException(authorId)));
     }
 
     @Override
-    public Optional<String> deleteAuthor(long authorId) {
-        AuthorEntity authorEntity = authorRepository.findById(authorId)
-                .orElseThrow(() -> new NotFoundException(Const.AUTHOR, authorId));
-        authorRepository.delete(authorEntity);
-        return Optional.of(Deleted.msg(Const.AUTHOR, authorId));
+    public void deleteAuthor(long authorId) {
+        if(authorRepository.existsById(authorId)) {
+            try {
+                authorRepository.deleteById(authorId);
+            } catch (Exception e){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Delete Books-Author connections first.");
+            }
+        } else {
+            throw new AuthorNotFoundException(authorId);
+        }
     }
 }

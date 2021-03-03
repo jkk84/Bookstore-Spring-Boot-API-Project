@@ -42,9 +42,7 @@ public class AuthorController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteAuthor(@RequestParam long authorId) {
-        return authorService.deleteAuthor(authorId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteAuthor(@RequestParam long authorId) {
+        authorService.deleteAuthor(authorId);
     }
 }

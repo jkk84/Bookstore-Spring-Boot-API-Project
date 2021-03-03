@@ -1,9 +1,7 @@
 package pl.bookstore.restapi.mapper;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.NotFoundException;
 import pl.bookstore.restapi.model.AuthorEntity;
 import pl.bookstore.restapi.model.BookEntity;
 import pl.bookstore.restapi.model.CategoryEntity;
@@ -14,6 +12,7 @@ import pl.bookstore.restapi.repository.CategoryRepository;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor

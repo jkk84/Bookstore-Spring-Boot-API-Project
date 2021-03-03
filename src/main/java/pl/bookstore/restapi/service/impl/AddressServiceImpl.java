@@ -2,14 +2,14 @@ package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.NotFoundException;
+import pl.bookstore.restapi.exception.AddressNotFoundException;
+import pl.bookstore.restapi.exception.CustomerNotFoundException;
 import pl.bookstore.restapi.mapper.AddressMapper;
 import pl.bookstore.restapi.model.AddressEntity;
 import pl.bookstore.restapi.model.dto.AddressDto;
 import pl.bookstore.restapi.repository.AddressRepository;
 import pl.bookstore.restapi.repository.CustomerRepository;
 import pl.bookstore.restapi.service.AddressService;
-import pl.bookstore.restapi.util.Const;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,21 +26,21 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDto addAddress(AddressDto addressDto) {
         AddressEntity addressEntity = addressMapper.toEntity(addressDto);
-        addressRepository.save(addressEntity);
+        addressRepository.saveAndFlush(addressEntity);
         return addressMapper.toDto(addressEntity);
     }
 
     @Override
     public Optional<AddressEntity> getAddress(long addressId) {
         AddressEntity addressEntity = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NotFoundException(Const.ADDRESS, addressId));
+                .orElseThrow(() -> new AddressNotFoundException(addressId));
         return Optional.of(addressEntity);
     }
 
     @Override
     public List<AddressEntity> getAllCustomerAddresses(long customerId) {
         if(!customerRepository.existsById(customerId)) {
-            throw new NotFoundException(Const.CUSTOMER, customerId);
+            throw new CustomerNotFoundException(customerId);
         }
         return addressRepository.findByCustomerEntityCustomerId(customerId);
     }
@@ -58,13 +58,15 @@ public class AddressServiceImpl implements AddressService {
                     address.setCountry(addressDto.getCountry());
                     return addressRepository.save(address);
                 })
-                .orElseThrow(() -> new NotFoundException(Const.ADDRESS, addressId))));
+                .orElseThrow(() -> new AddressNotFoundException(addressId))));
     }
 
     @Override
     public void deleteAddress(long addressId) {
-        if(addressRepository.existsById(addressId)) {
+        try {
             addressRepository.deleteById(addressId);
-        } else throw new NotFoundException(Const.ADDRESS, addressId);
+        } catch (Exception e){
+            throw new AddressNotFoundException(addressId);
+        }
     }
 }

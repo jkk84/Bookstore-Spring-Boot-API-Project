@@ -16,5 +16,5 @@ public interface CategoryService {
 
     Optional<CategoryEntity> updateCategory(CategoryEntity categoryEntity, long categoryId);
 
-    Optional<String> deleteCategory(long categoryId);
+    void deleteCategory(long categoryId);
 }

@@ -1,13 +1,13 @@
 package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.NotFoundException;
+import org.springframework.web.server.ResponseStatusException;
+import pl.bookstore.restapi.exception.CategoryNotFoundException;
 import pl.bookstore.restapi.model.CategoryEntity;
 import pl.bookstore.restapi.repository.CategoryRepository;
 import pl.bookstore.restapi.service.CategoryService;
-import pl.bookstore.restapi.util.Const;
-import pl.bookstore.restapi.util.Deleted;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Optional<CategoryEntity> getCategory(long categoryId) {
         CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException(Const.CATEGORY, categoryId));
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
         return Optional.of(categoryEntity);
     }
 
@@ -44,14 +44,19 @@ public class CategoryServiceImpl implements CategoryService {
                     category.setName(categoryEntity.getName());
                     return categoryRepository.save(category);
                 })
-                .orElseThrow(() -> new NotFoundException(Const.CATEGORY, categoryId)));
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId)));
     }
 
     @Override
-    public Optional<String> deleteCategory(long categoryId) {
-        CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException(Const.CATEGORY, categoryId));
-        categoryRepository.delete(categoryEntity);
-        return Optional.of(Deleted.msg(Const.CATEGORY, categoryId));
+    public void deleteCategory(long categoryId) {
+        if(categoryRepository.existsById(categoryId)) {
+            try {
+                categoryRepository.deleteById(categoryId);
+            } catch (Exception e){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Delete Books-Category connections first.");
+            }
+        } else {
+            throw  new CategoryNotFoundException(categoryId);
+        }
     }
 }

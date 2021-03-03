@@ -37,7 +37,7 @@ public class BookController {
     public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
         return bookService.addBook(bookDto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @PutMapping
@@ -49,9 +49,7 @@ public class BookController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteBook(@RequestParam long bookId) {
-        return bookService.deleteBook(bookId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteBook(@RequestParam long bookId) {
+        bookService.deleteBook(bookId);
     }
 }

@@ -42,9 +42,7 @@ public class CategoryController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteCategory(@RequestParam long categoryId) {
-        return categoryService.deleteCategory(categoryId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public void deleteCategory(@RequestParam long categoryId) {
+        categoryService.deleteCategory(categoryId);
     }
 }
