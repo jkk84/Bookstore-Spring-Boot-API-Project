@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
 
 
 @Entity
@@ -16,7 +15,6 @@ public class AddressEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column()
     private long addressId;
 
     private String addressLine1;
@@ -34,8 +32,8 @@ public class AddressEntity {
     private String country;
 
     @JsonIgnore
-    @ManyToOne
-    @JoinTable(name="customers_addresses", joinColumns = @JoinColumn(name = "addresses_addressId"),
+    @OneToOne
+    @JoinTable(name="addresses_customers", joinColumns = @JoinColumn(name = "addresses_addressId"),
             inverseJoinColumns = @JoinColumn(name = "customers_customerId"))
     private CustomerEntity customerEntity;
 }
