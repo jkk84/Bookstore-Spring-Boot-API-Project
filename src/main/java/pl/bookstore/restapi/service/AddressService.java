@@ -1,6 +1,5 @@
 package pl.bookstore.restapi.service;
 
-import pl.bookstore.restapi.model.AddressEntity;
 import pl.bookstore.restapi.model.dto.AddressDto;
 
 import java.util.List;
@@ -11,9 +10,9 @@ public interface AddressService {
 
     AddressDto addAddress(AddressDto addressDto);
 
-    Optional<AddressEntity> getAddress(long addressId);
+    Optional<AddressDto> getAddress(long addressId);
 
-    List<AddressEntity> getAllCustomerAddresses(long customerId);
+    List<AddressDto> getAllCustomerAddresses(long customerId);
 
     Optional<AddressDto> updateAddress(AddressDto addressDto, long addressId);
 

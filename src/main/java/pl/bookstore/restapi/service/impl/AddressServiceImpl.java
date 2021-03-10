@@ -26,23 +26,23 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDto addAddress(AddressDto addressDto) {
         AddressEntity addressEntity = addressMapper.toEntity(addressDto);
-        addressRepository.saveAndFlush(addressEntity);
+        addressRepository.save(addressEntity);
         return addressMapper.toDto(addressEntity);
     }
 
     @Override
-    public Optional<AddressEntity> getAddress(long addressId) {
+    public Optional<AddressDto> getAddress(long addressId) {
         AddressEntity addressEntity = addressRepository.findById(addressId)
                 .orElseThrow(() -> new AddressNotFoundException(addressId));
-        return Optional.of(addressEntity);
+        return Optional.of(addressMapper.toDto(addressEntity));
     }
 
     @Override
-    public List<AddressEntity> getAllCustomerAddresses(long customerId) {
+    public List<AddressDto> getAllCustomerAddresses(long customerId) {
         if(!customerRepository.existsById(customerId)) {
             throw new CustomerNotFoundException(customerId);
         }
-        return addressRepository.findByCustomerEntityCustomerId(customerId);
+        return addressMapper.toDtos(addressRepository.findByCustomerEntityCustomerId(customerId));
     }
 
     @Override

@@ -3,7 +3,6 @@ package pl.bookstore.restapi.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.bookstore.restapi.model.AddressEntity;
 import pl.bookstore.restapi.model.dto.AddressDto;
 import pl.bookstore.restapi.service.AddressService;
 
@@ -23,14 +22,14 @@ public class AddressController {
     }
 
     @GetMapping(params = {"addressId"})
-    public ResponseEntity<AddressEntity> getAddress(@RequestParam long addressId) {
+    public ResponseEntity<AddressDto> getAddress(@RequestParam long addressId) {
         return addressService.getAddress(addressId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping(params = {"customerId"})
-    public List<AddressEntity> getAllCustomerAddresses(@RequestParam long customerId) {
+    public List<AddressDto> getAllCustomerAddresses(@RequestParam long customerId) {
         return addressService.getAllCustomerAddresses(customerId);
     }
 

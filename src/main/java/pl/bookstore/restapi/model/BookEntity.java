@@ -1,5 +1,6 @@
 package pl.bookstore.restapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,4 +44,10 @@ public class BookEntity {
     @JoinTable(name="books_categories", joinColumns = @JoinColumn(name = "books_bookId"),
             inverseJoinColumns = @JoinColumn(name = "categories_authorId"))
     private Set<CategoryEntity> categoryEntities;
+
+    @JsonIgnore
+    @OneToMany(orphanRemoval = true)
+    @JoinTable(name="reviews_books", joinColumns = @JoinColumn(name = "books_bookId"),
+            inverseJoinColumns = @JoinColumn(name = "reviews_reviewId"))
+    private Set<ReviewEntity> reviewEntity;
 }

@@ -1,6 +1,5 @@
 package pl.bookstore.restapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,9 +30,8 @@ public class AddressEntity {
 
     private String country;
 
-    @JsonIgnore
-    @OneToOne
-    @JoinTable(name="addresses_customers", joinColumns = @JoinColumn(name = "addresses_addressId"),
+    @ManyToOne
+    @JoinTable(name="customers_addresses", joinColumns = @JoinColumn(name = "addresses_addressId"),
             inverseJoinColumns = @JoinColumn(name = "customers_customerId"))
     private CustomerEntity customerEntity;
 }

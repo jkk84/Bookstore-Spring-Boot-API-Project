@@ -54,6 +54,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         return reviewMapper.toDtos(reviewRepository.findByCustomerEntityCustomerId(customerId));
     }
+
     @Override
     public List<ReviewDto> getLatestFiveReviews() {
         return reviewMapper.toDtos(reviewRepository.findFirst5ByOrderByReviewIdDesc());

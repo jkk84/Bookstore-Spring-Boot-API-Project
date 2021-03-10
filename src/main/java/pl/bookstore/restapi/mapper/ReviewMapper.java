@@ -27,14 +27,24 @@ public class ReviewMapper {
     }
 
     public ReviewDto toDto(ReviewEntity reviewEntity) {
-        return ReviewDto.builder()
-                .reviewId(reviewEntity.getReviewId())
-                .rating(reviewEntity.getRating())
-                .comment(reviewEntity.getComment())
-                .createdAt(reviewEntity.getCreatedAt())
-                .customerId(reviewEntity.getCustomerEntity().getCustomerId())
-                .bookId(reviewEntity.getBookEntity().getBookId())
-                .build();
+        if(reviewEntity.getCustomerEntity() == null) {
+            return ReviewDto.builder()
+                    .reviewId(reviewEntity.getReviewId())
+                    .rating(reviewEntity.getRating())
+                    .comment(reviewEntity.getComment())
+                    .createdAt(reviewEntity.getCreatedAt())
+                    .bookId(reviewEntity.getBookEntity().getBookId())
+                    .build();
+        } else {
+            return ReviewDto.builder()
+                    .reviewId(reviewEntity.getReviewId())
+                    .rating(reviewEntity.getRating())
+                    .comment(reviewEntity.getComment())
+                    .createdAt(reviewEntity.getCreatedAt())
+                    .customerId(reviewEntity.getCustomerEntity().getCustomerId())
+                    .bookId(reviewEntity.getBookEntity().getBookId())
+                    .build();
+        }
     }
 
     public ReviewEntity toEntity(ReviewDto reviewDto) {

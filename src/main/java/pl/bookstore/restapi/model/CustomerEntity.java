@@ -36,9 +36,20 @@ public class CustomerEntity {
 
     private String phone;
 
-    @JsonIgnore
     @OneToMany(orphanRemoval=true)
     @JoinTable(name="customers_addresses", joinColumns = @JoinColumn(name = "customers_customerId"),
             inverseJoinColumns = @JoinColumn(name = "addresses_addressId"))
     private Set<AddressEntity> addressEntities;
+
+    @JsonIgnore
+    @OneToMany
+    @JoinTable(name="reviews_customers", joinColumns = @JoinColumn(name = "customers_customerId"),
+            inverseJoinColumns = @JoinColumn(name = "reviews_reviewId"))
+    private Set<ReviewEntity> reviewEntity;
+
+    @JsonIgnore
+    @OneToOne(orphanRemoval=true)
+    @JoinTable(name="purchases_customers", joinColumns = @JoinColumn(name = "customers_customerId"),
+            inverseJoinColumns = @JoinColumn(name = "purchases_purchaseId"))
+    private PurchaseEntity purchaseEntity;
 }
