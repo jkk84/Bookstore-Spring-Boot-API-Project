@@ -1,7 +1,12 @@
 package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.engine.internal.ImmutableEntityEntry;
+import org.hibernate.type.CollectionType;
+import org.springframework.data.annotation.Immutable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import pl.bookstore.restapi.exception.BookNotFoundException;
 import pl.bookstore.restapi.mapper.BookMapper;
 import pl.bookstore.restapi.model.AuthorEntity;
@@ -41,12 +46,12 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getBooksByAuthorsAndCategories(List<Long> authorIds, List<Long> categoryIds) {
         List<AuthorEntity> authorEntities;
-        if (authorIds.size() > 0) {
+        if (authorRepository.findAllById(authorIds).size() > 0) {
             authorEntities = authorRepository.findAllById(authorIds);
         } else { authorEntities = authorRepository.findAll(); }
 
         List<CategoryEntity> categoryEntities;
-        if(categoryIds.size() > 0) {
+        if(categoryRepository.findAllById(categoryIds).size() > 0) {
             categoryEntities = categoryRepository.findAllById(categoryIds);
         } else { categoryEntities = categoryRepository.findAll(); }
 
@@ -57,41 +62,31 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<BookDto> addBook(BookDto bookDto) {
         BookEntity bookEntity = bookMapper.toEntity(bookDto);
-        Set<AuthorEntity> authorEntities = Set.copyOf(authorRepository
-                .findAllById(bookDto.getAuthorIds()));
-        Set<CategoryEntity> categoryEntities = Set.copyOf(categoryRepository
-                .findAllById(bookDto.getCategoryIds()));
-
-        if(bookDto.getAuthorIds().size() == authorEntities.size()
-                && bookDto.getCategoryIds().size() == categoryEntities.size()
-                && ((bookDto.getAuthorIds().size() > 0)
-                && (bookDto.getCategoryIds().size() > 0))) {
-            bookRepository.save(bookEntity);
-            return Optional.of(bookMapper.toDto(bookEntity));
+        if(!(authorRepository.existsByAuthorIdIn(bookDto.getAuthorIds())
+                && categoryRepository.existsByCategoryIdIn(bookDto.getCategoryIds()))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author and/or category not found.");
         }
-        return Optional.empty();
+        bookRepository.save(bookEntity);
+        return Optional.of(bookMapper.toDto(bookEntity));
     }
 
     @Override
     public Optional<BookDto> updateBook(BookDto bookDto, long bookId) {
          BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException(bookId));
-        BookEntity bookEntity = bookMapper.toEntity(bookDto);
-        bookEntity.setBookId(bookId);
-        bookEntity.setCreatedAt(book.getCreatedAt());
-        Set<AuthorEntity> authorEntities = Set.copyOf(authorRepository
-                .findAllById(bookDto.getAuthorIds()));
-        Set<CategoryEntity> categoryEntities = Set.copyOf(categoryRepository
-                .findAllById(bookDto.getCategoryIds()));
-
-        if(bookDto.getAuthorIds().size() == authorEntities.size()
-                && bookDto.getCategoryIds().size() == categoryEntities.size()
-                && ((bookDto.getAuthorIds().size() > 0)
-                && (bookDto.getCategoryIds().size() > 0))) {
-            bookRepository.save(bookEntity);
-            return Optional.of(bookMapper.toDto(bookEntity));
+        book.setIsbn(bookDto.getIsbn());
+        book.setTitle(bookDto.getTitle());
+        book.setDescription(bookDto.getDescription());
+        book.setPrice(bookDto.getPrice());
+        book.setImageUrl(bookDto.getImageUrl());
+        if(!(authorRepository.existsByAuthorIdIn(bookDto.getAuthorIds())
+                && categoryRepository.existsByCategoryIdIn(bookDto.getCategoryIds()))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author and/or category not found.");
         }
-        return Optional.empty();
+        book.setAuthorEntities(authorRepository.findAllByAuthorIdIn(bookDto.getAuthorIds()));
+        book.setCategoryEntities(categoryRepository.findAllByCategoryIdIn(bookDto.getCategoryIds()));
+        bookRepository.save(book);
+        return Optional.of(bookMapper.toDto(book));
     }
 
     @Override

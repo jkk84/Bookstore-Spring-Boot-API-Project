@@ -50,11 +50,9 @@ public class BookMapper {
         bookEntity.setDescription(bookDto.getDescription());
         bookEntity.setPrice(bookDto.getPrice());
         bookEntity.setImageUrl(bookDto.getImageUrl());
-        Set<AuthorEntity> authorEntity = Set.copyOf(authorRepository
-                .findAllById(bookDto.getAuthorIds()));
+        Set<AuthorEntity> authorEntity = authorRepository.findAllByAuthorIdIn(bookDto.getAuthorIds());
         bookEntity.setAuthorEntities(authorEntity);
-        Set<CategoryEntity> categoryEntities = Set.copyOf(categoryRepository
-                .findAllById(bookDto.getCategoryIds()));
+        Set<CategoryEntity> categoryEntities = categoryRepository.findAllByCategoryIdIn(bookDto.getCategoryIds());
         bookEntity.setCategoryEntities(categoryEntities);
         return bookEntity;
     }

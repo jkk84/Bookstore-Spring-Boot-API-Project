@@ -37,7 +37,7 @@ public class BookController {
     public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
         return bookService.addBook(bookDto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping
