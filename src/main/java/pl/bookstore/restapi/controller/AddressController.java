@@ -29,8 +29,8 @@ public class AddressController {
     }
 
     @GetMapping(params = {"customerId"})
-    public List<AddressDto> getAllCustomerAddresses(@RequestParam long customerId) {
-        return addressService.getAllCustomerAddresses(customerId);
+    public List<AddressDto> getAllCustomerAddresses(@RequestParam String login) {
+        return addressService.getAllCustomerAddresses(login);
     }
 
     @PutMapping

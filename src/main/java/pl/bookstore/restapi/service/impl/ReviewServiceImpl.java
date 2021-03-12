@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.bookstore.restapi.exception.BookNotFoundException;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
-import pl.bookstore.restapi.exception.ReviewNotFoundException;
+import pl.bookstore.restapi.commons.exception.BookNotFoundException;
+import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.ReviewNotFoundException;
 import pl.bookstore.restapi.mapper.ReviewMapper;
 import pl.bookstore.restapi.model.ReviewEntity;
 import pl.bookstore.restapi.model.dto.ReviewDto;
@@ -31,8 +31,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Optional<ReviewDto> addReview(ReviewDto reviewDto) {
         ReviewEntity reviewEntity = reviewMapper.toEntity(reviewDto);
-        if(reviewRepository.existsByCustomerEntityCustomerIdAndBookEntityBookId
-                    (reviewDto.getCustomerId(), reviewDto.getBookId())) {
+        if(reviewRepository.existsByCustomerEntityLoginAndBookEntityBookId
+                    (reviewDto.getLogin(), reviewDto.getBookId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Review already written.");
         }
         reviewRepository.save(reviewEntity);
@@ -48,11 +48,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> getCustomerReviews(long customerId) {
-        if(!customerRepository.existsById(customerId)) {
-            throw new CustomerNotFoundException(customerId);
+    public List<ReviewDto> getCustomerReviews(String login) {
+        if(!customerRepository.existsByLogin(login)) {
+            throw new CustomerNotFoundException(login);
         }
-        return reviewMapper.toDtos(reviewRepository.findByCustomerEntityCustomerId(customerId));
+        return reviewMapper.toDtos(reviewRepository.findByCustomerEntityLogin(login));
     }
 
     @Override

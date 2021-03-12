@@ -1,13 +1,10 @@
 package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.engine.internal.ImmutableEntityEntry;
-import org.hibernate.type.CollectionType;
-import org.springframework.data.annotation.Immutable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.bookstore.restapi.exception.BookNotFoundException;
+import pl.bookstore.restapi.commons.exception.BookNotFoundException;
 import pl.bookstore.restapi.mapper.BookMapper;
 import pl.bookstore.restapi.model.AuthorEntity;
 import pl.bookstore.restapi.model.BookEntity;
@@ -20,7 +17,6 @@ import pl.bookstore.restapi.service.BookService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 @Service

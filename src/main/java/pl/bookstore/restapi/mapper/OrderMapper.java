@@ -2,13 +2,10 @@ package pl.bookstore.restapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.BookNotFoundException;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
-import pl.bookstore.restapi.exception.PurchaseNotFoundException;
+import pl.bookstore.restapi.commons.exception.BookNotFoundException;
+import pl.bookstore.restapi.commons.exception.PurchaseNotFoundException;
 import pl.bookstore.restapi.model.OrderEntity;
-import pl.bookstore.restapi.model.ReviewEntity;
 import pl.bookstore.restapi.model.dto.OrderDto;
-import pl.bookstore.restapi.model.dto.ReviewDto;
 import pl.bookstore.restapi.repository.BookRepository;
 import pl.bookstore.restapi.repository.PurchaseRepository;
 

@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.bookstore.restapi.exception.AddressNotFoundException;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
-import pl.bookstore.restapi.exception.PurchaseNotFoundException;
+import pl.bookstore.restapi.commons.exception.AddressNotFoundException;
+import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.PurchaseNotFoundException;
 import pl.bookstore.restapi.mapper.PurchaseMapper;
 import pl.bookstore.restapi.model.PurchaseEntity;
 import pl.bookstore.restapi.model.dto.PurchaseDto;
@@ -29,13 +29,13 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public PurchaseDto addPurchase(PurchaseDto purchaseDto) {
         PurchaseEntity purchaseEntity = purchaseMapper.toEntity(purchaseDto);
-        long customerId = purchaseDto.getCustomerId();
+        String login = purchaseDto.getLogin();
         long addressId = purchaseDto.getAddressId();
 
-        if(purchaseRepository.existsByCustomerEntityCustomerId(customerId)) {
+        if(purchaseRepository.existsByCustomerEntityLogin(login)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase already exists.");
         }
-        if(customerRepository.existsByCustomerIdAndAddressEntitiesAddressIdIn(customerId, List.of(addressId))) {
+        if(customerRepository.existsByLoginAndAddressEntitiesAddressIdIn(login, List.of(addressId))) {
             purchaseRepository.save(purchaseEntity);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer or Address not found");
@@ -44,15 +44,15 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Optional<PurchaseDto> getCustomerPurchase(long customerId) {
-        if(!customerRepository.existsById(customerId)) {
-            throw new CustomerNotFoundException(customerId);
+    public Optional<PurchaseDto> getCustomerPurchase(String login) {
+        if(!customerRepository.existsByLogin(login)) {
+            throw new CustomerNotFoundException(login);
         }
         try {
             return Optional.of(purchaseMapper.toDto(purchaseRepository
-                .findByCustomerEntityCustomerId(customerId)));
+                .findByCustomerEntityLogin(login)));
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Purchase for customer " + customerId + " nor found.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Purchase for " + login + " nor found.");
         }
     }
 

@@ -1,5 +1,6 @@
 package pl.bookstore.restapi.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,19 +13,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CustomerDto {
 
-    private long customerId;
-
     private LocalDateTime registerAt;
 
     private String email;
 
-    private String username;
+    private String login;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    private String name;
+    private String firstName;
 
-    private String surname;
+    private String lastName;
 
     private String phone;
 }

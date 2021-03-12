@@ -1,24 +1,25 @@
 package pl.bookstore.restapi.mapper;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import pl.bookstore.restapi.model.CustomerEntity;
 import pl.bookstore.restapi.model.dto.CustomerDto;
 
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class CustomerMapper {
 
+    private final PasswordEncoder passwordEncoder;
+
     public CustomerDto toDto(CustomerEntity customerEntity) {
         return CustomerDto.builder()
-                .customerId(customerEntity.getCustomerId())
                 .registerAt(customerEntity.getRegisterAt())
                 .email(customerEntity.getEmail())
-                .username(customerEntity.getUsername())
-                .password(customerEntity.getPassword())
-                .name(customerEntity.getName())
-                .surname(customerEntity.getSurname())
+                .login(customerEntity.getLogin())
+                .firstName(customerEntity.getFirstName())
+                .lastName(customerEntity.getLastName())
                 .phone(customerEntity.getPhone())
                 .build();
     }
@@ -26,10 +27,10 @@ public class CustomerMapper {
     public CustomerEntity toEntity(CustomerDto customerDto) {
         CustomerEntity customerEntity = new CustomerEntity();
         customerEntity.setEmail(customerDto.getEmail());
-        customerEntity.setUsername(customerDto.getSurname());
-        customerEntity.setPassword(customerDto.getPassword());
-        customerEntity.setName(customerDto.getName());
-        customerEntity.setSurname(customerDto.getSurname());
+        customerEntity.setLogin(customerDto.getLogin());
+        customerEntity.setPassword(passwordEncoder.encode(customerDto.getPassword()));
+        customerEntity.setFirstName(customerDto.getFirstName());
+        customerEntity.setLastName(customerDto.getLastName());
         customerEntity.setPhone(customerDto.getPhone());
         return customerEntity;
     }

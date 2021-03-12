@@ -6,11 +6,9 @@ import java.util.Optional;
 
 public interface CustomerService {
 
-    CustomerDto addCustomer(CustomerDto customerDto);
+    Optional<CustomerDto> getCustomer(String login);
 
-    Optional<CustomerDto> getCustomer(long customerId);
+    Optional<CustomerDto> updateCustomer(CustomerDto customerDto, String login);
 
-    Optional<CustomerDto> updateCustomer(CustomerDto customerDto, long customerId);
-
-    void deleteCustomer(long customerId);
+    void deleteCustomer(String login);
 }

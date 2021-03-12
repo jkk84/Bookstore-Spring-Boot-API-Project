@@ -29,8 +29,8 @@ public class ReviewController {
     }
 
     @GetMapping(params = {"customerId"})
-    public List<ReviewDto> getCustomerReviews(@RequestParam long customerId) {
-        return reviewService.getCustomerReviews(customerId);
+    public List<ReviewDto> getCustomerReviews(@RequestParam String login) {
+        return reviewService.getCustomerReviews(login);
     }
 
     @GetMapping

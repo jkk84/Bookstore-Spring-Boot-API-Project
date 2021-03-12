@@ -11,6 +11,6 @@ import java.util.List;
 public interface AddressRepository extends JpaRepository<AddressEntity, Long> {
 
 
-    List<AddressEntity> findByCustomerEntityCustomerId(long customerId);
+    List<AddressEntity> findByCustomerEntityLogin(String login);
 
 }

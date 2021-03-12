@@ -14,28 +14,23 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @PostMapping
-    public ResponseEntity<CustomerDto> addCustomer(@RequestBody CustomerDto customerDto) {
-        return ResponseEntity.ok(customerService.addCustomer(customerDto));
-    }
-
     @GetMapping
-    public ResponseEntity<CustomerDto> getCustomer(@RequestParam long customerId) {
-        return customerService.getCustomer(customerId)
+    public ResponseEntity<CustomerDto> getCustomer(@RequestParam String login) {
+        return customerService.getCustomer(login)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping
     public ResponseEntity<CustomerDto> updateCustomer
-            (@RequestBody CustomerDto customerDto, @RequestParam long customerId) {
-        return customerService.updateCustomer(customerDto, customerId)
+            (@RequestBody CustomerDto customerDto, @RequestParam String login) {
+        return customerService.updateCustomer(customerDto, login)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping
-    public void deleteCustomer(@RequestParam long customerId) {
-        customerService.deleteCustomer(customerId);
+    public void deleteCustomer(@RequestParam String login) {
+        customerService.deleteCustomer(login);
     }
 }

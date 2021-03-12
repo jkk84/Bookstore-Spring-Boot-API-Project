@@ -1,4 +1,4 @@
-package pl.bookstore.restapi.exception;
+package pl.bookstore.restapi.commons.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

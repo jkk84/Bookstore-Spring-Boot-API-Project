@@ -12,7 +12,7 @@ public interface AddressService {
 
     Optional<AddressDto> getAddress(long addressId);
 
-    List<AddressDto> getAllCustomerAddresses(long customerId);
+    List<AddressDto> getAllCustomerAddresses(String login);
 
     Optional<AddressDto> updateAddress(AddressDto addressDto, long addressId);
 

@@ -2,7 +2,7 @@ package pl.bookstore.restapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
 import pl.bookstore.restapi.model.*;
 import pl.bookstore.restapi.model.dto.AddressDto;
 import pl.bookstore.restapi.repository.CustomerRepository;
@@ -33,7 +33,7 @@ public class AddressMapper {
                 .state(addressEntity.getState())
                 .postalCode(addressEntity.getPostalCode())
                 .country(addressEntity.getCountry())
-                .customerId(addressEntity.getCustomerEntity().getCustomerId())
+                .login(addressEntity.getCustomerEntity().getLogin())
                 .build();
     }
 
@@ -46,8 +46,8 @@ public class AddressMapper {
         addressEntity.setState(addressDto.getState());
         addressEntity.setPostalCode(addressDto.getPostalCode());
         addressEntity.setCountry(addressDto.getCountry());
-        addressEntity.setCustomerEntity(customerRepository.findById(addressDto.getCustomerId())
-                .orElseThrow(() -> new CustomerNotFoundException(addressDto.getCustomerId())));
+        addressEntity.setCustomerEntity(customerRepository.findByLogin(addressDto.getLogin())
+                .orElseThrow(() -> new CustomerNotFoundException(addressDto.getLogin())));
         return addressEntity;
     }
 }

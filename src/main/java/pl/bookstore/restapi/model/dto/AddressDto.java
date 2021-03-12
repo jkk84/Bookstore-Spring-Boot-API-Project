@@ -26,5 +26,5 @@ public class AddressDto {
 
     private String country;
 
-    private long customerId;
+    private String login;
 }

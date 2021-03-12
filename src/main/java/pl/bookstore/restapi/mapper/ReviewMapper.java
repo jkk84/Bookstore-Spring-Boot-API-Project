@@ -2,8 +2,8 @@ package pl.bookstore.restapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.BookNotFoundException;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.BookNotFoundException;
+import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
 import pl.bookstore.restapi.model.ReviewEntity;
 import pl.bookstore.restapi.model.dto.ReviewDto;
 import pl.bookstore.restapi.repository.BookRepository;
@@ -41,7 +41,7 @@ public class ReviewMapper {
                     .rating(reviewEntity.getRating())
                     .comment(reviewEntity.getComment())
                     .createdAt(reviewEntity.getCreatedAt())
-                    .customerId(reviewEntity.getCustomerEntity().getCustomerId())
+                    .login(reviewEntity.getCustomerEntity().getLogin())
                     .bookId(reviewEntity.getBookEntity().getBookId())
                     .build();
         }
@@ -51,8 +51,8 @@ public class ReviewMapper {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setRating(reviewDto.getRating());
         reviewEntity.setComment(reviewDto.getComment());
-        reviewEntity.setCustomerEntity(customerRepository.findById(reviewDto.getCustomerId())
-                .orElseThrow(() -> new CustomerNotFoundException(reviewDto.getCustomerId())));
+        reviewEntity.setCustomerEntity(customerRepository.findByLogin(reviewDto.getLogin())
+                .orElseThrow(() -> new CustomerNotFoundException(reviewDto.getLogin())));
         reviewEntity.setBookEntity(bookRepository.findById(reviewDto.getBookId())
                 .orElseThrow(() -> new BookNotFoundException(reviewDto.getBookId())));
         return reviewEntity;

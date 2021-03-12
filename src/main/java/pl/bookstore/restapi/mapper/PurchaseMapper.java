@@ -2,8 +2,8 @@ package pl.bookstore.restapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.AddressNotFoundException;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.AddressNotFoundException;
+import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
 import pl.bookstore.restapi.model.PurchaseEntity;
 import pl.bookstore.restapi.model.dto.PurchaseDto;
 import pl.bookstore.restapi.repository.AddressRepository;
@@ -21,15 +21,15 @@ public class PurchaseMapper {
         return PurchaseDto.builder()
                 .purchaseId(purchaseEntity.getPurchaseId())
                 .createdAt(purchaseEntity.getCreatedAt())
-                .customerId(purchaseEntity.getCustomerEntity().getCustomerId())
+                .login(purchaseEntity.getCustomerEntity().getLogin())
                 .addressId(purchaseEntity.getAddressEntity().getAddressId())
                 .build();
     }
 
     public PurchaseEntity toEntity(PurchaseDto purchaseDto) {
         PurchaseEntity purchaseEntity = new PurchaseEntity();
-        purchaseEntity.setCustomerEntity(customerRepository.findById(purchaseDto.getCustomerId())
-                .orElseThrow(() -> new CustomerNotFoundException(purchaseDto.getCustomerId())));
+        purchaseEntity.setCustomerEntity(customerRepository.findByLogin(purchaseDto.getLogin())
+                .orElseThrow(() -> new CustomerNotFoundException(purchaseDto.getLogin())));
         purchaseEntity.setAddressEntity(addressRepository.findById(purchaseDto.getAddressId())
                 .orElseThrow(() -> new AddressNotFoundException(purchaseDto.getAddressId())));
         return purchaseEntity;

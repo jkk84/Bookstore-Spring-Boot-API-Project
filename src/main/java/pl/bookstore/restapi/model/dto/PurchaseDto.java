@@ -16,7 +16,7 @@ public class PurchaseDto {
 
     private LocalDateTime createdAt;
 
-    private long customerId;
+    private String login;
 
     private long addressId;
 }

@@ -5,10 +5,17 @@ import org.springframework.stereotype.Repository;
 import pl.bookstore.restapi.model.CustomerEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
 
-    boolean existsByCustomerIdAndAddressEntitiesAddressIdIn(long customerId, List<Long> addressId);
+    Optional<CustomerEntity> findByLogin(String login);
+
+    void deleteByLogin(String login);
+
+    boolean existsByLoginAndAddressEntitiesAddressIdIn(String login, List<Long> addressId);
+
+    boolean existsByLogin(String login);
 }

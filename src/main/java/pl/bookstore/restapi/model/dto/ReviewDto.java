@@ -19,7 +19,7 @@ public class ReviewDto {
 
     private LocalDateTime createdAt;
 
-    private long customerId;
+    private String login;
 
     private long bookId;
 }

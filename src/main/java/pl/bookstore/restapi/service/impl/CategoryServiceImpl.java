@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.bookstore.restapi.exception.CategoryNotFoundException;
+import pl.bookstore.restapi.commons.exception.CategoryNotFoundException;
 import pl.bookstore.restapi.model.CategoryEntity;
 import pl.bookstore.restapi.repository.CategoryRepository;
 import pl.bookstore.restapi.service.CategoryService;

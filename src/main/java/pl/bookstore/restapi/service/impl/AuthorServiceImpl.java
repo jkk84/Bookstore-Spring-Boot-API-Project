@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.bookstore.restapi.exception.AuthorNotFoundException;
+import pl.bookstore.restapi.commons.exception.AuthorNotFoundException;
 import pl.bookstore.restapi.model.AuthorEntity;
 import pl.bookstore.restapi.repository.AuthorRepository;
 import pl.bookstore.restapi.service.AuthorService;

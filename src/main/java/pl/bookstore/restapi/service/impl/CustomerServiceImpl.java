@@ -2,9 +2,8 @@ package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
 import pl.bookstore.restapi.mapper.CustomerMapper;
-import pl.bookstore.restapi.model.CustomerEntity;
 import pl.bookstore.restapi.model.dto.CustomerDto;
 import pl.bookstore.restapi.repository.CustomerRepository;
 import pl.bookstore.restapi.service.CustomerService;
@@ -20,39 +19,30 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
 
     @Override
-    public CustomerDto addCustomer(CustomerDto customerDto) {
-        CustomerEntity customerEntity = customerMapper.toEntity(customerDto);
-        customerRepository.save(customerEntity);
-        return customerMapper.toDto(customerEntity);
+    public Optional<CustomerDto> getCustomer(String login) {
+        return Optional.of(customerMapper.toDto(customerRepository.findByLogin(login)
+        .orElseThrow(() -> new CustomerNotFoundException(login))));
     }
 
     @Override
-    public Optional<CustomerDto> getCustomer(long customerId) {
-        return Optional.of(customerMapper.toDto(customerRepository.findById(customerId)
-        .orElseThrow(() -> new CustomerNotFoundException(customerId))));
-    }
-
-    @Override
-    public Optional<CustomerDto> updateCustomer(CustomerDto customerDto, long customerId) {
-        return Optional.of(customerMapper.toDto(customerRepository.findById(customerId)
+    public Optional<CustomerDto> updateCustomer(CustomerDto customerDto, String login) {
+        return Optional.of(customerMapper.toDto(customerRepository.findByLogin(login)
             .map(customer -> {
                 customer.setEmail(customerDto.getEmail());
-                customer.setUsername(customerDto.getSurname());
-                customer.setPassword(customerDto.getPassword());
-                customer.setName(customerDto.getName());
-                customer.setSurname(customerDto.getSurname());
+                customer.setFirstName(customerDto.getFirstName());
+                customer.setLastName(customerDto.getLastName());
                 customer.setPhone(customerDto.getPhone());
                 return customerRepository.save(customer);
             })
-        .orElseThrow(() -> new CustomerNotFoundException(customerId))));
+        .orElseThrow(() -> new CustomerNotFoundException(login))));
     }
 
     @Override
-    public void deleteCustomer(long customerId) {
+    public void deleteCustomer(String login) {
         try {
-            customerRepository.deleteById(customerId);
+            customerRepository.deleteByLogin(login);
         } catch (Exception e){
-            throw new CustomerNotFoundException(customerId);
+            throw new CustomerNotFoundException(login);
         }
     }
 }

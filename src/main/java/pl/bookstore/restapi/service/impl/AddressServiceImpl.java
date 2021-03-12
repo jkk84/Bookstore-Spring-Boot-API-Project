@@ -2,8 +2,8 @@ package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.exception.AddressNotFoundException;
-import pl.bookstore.restapi.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.AddressNotFoundException;
+import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
 import pl.bookstore.restapi.mapper.AddressMapper;
 import pl.bookstore.restapi.model.AddressEntity;
 import pl.bookstore.restapi.model.dto.AddressDto;
@@ -38,11 +38,11 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDto> getAllCustomerAddresses(long customerId) {
-        if(!customerRepository.existsById(customerId)) {
-            throw new CustomerNotFoundException(customerId);
+    public List<AddressDto> getAllCustomerAddresses(String login) {
+        if(!customerRepository.existsByLogin(login)) {
+            throw new CustomerNotFoundException(login);
         }
-        return addressMapper.toDtos(addressRepository.findByCustomerEntityCustomerId(customerId));
+        return addressMapper.toDtos(addressRepository.findByCustomerEntityLogin(login));
     }
 
     @Override
