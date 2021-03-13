@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.bookstore.restapi.commons.exception.CategoryNotFoundException;
+import pl.bookstore.restapi.mapper.CategoryMapper;
 import pl.bookstore.restapi.model.CategoryEntity;
+import pl.bookstore.restapi.model.dto.CategoryDto;
 import pl.bookstore.restapi.repository.CategoryRepository;
 import pl.bookstore.restapi.service.CategoryService;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public List<CategoryEntity> getAllCategories() {
@@ -32,16 +35,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryEntity addCategory(CategoryEntity categoryEntity) {
+    public CategoryEntity addCategory(CategoryDto categoryDto) {
+        CategoryEntity categoryEntity = categoryMapper.toEntity(categoryDto);
         return categoryRepository.save(categoryEntity);
     }
 
     @Override
     public Optional<CategoryEntity> updateCategory
-            (CategoryEntity categoryEntity, long categoryId) {
+            (CategoryDto categoryDto, long categoryId) {
         return Optional.of(categoryRepository.findById(categoryId)
                 .map(category -> {
-                    category.setName(categoryEntity.getName());
+                    category.setName(categoryDto.getName());
                     return categoryRepository.save(category);
                 })
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId)));

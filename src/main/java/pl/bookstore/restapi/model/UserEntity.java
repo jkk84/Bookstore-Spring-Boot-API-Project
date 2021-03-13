@@ -39,6 +39,11 @@ public class UserEntity {
 
     private String phone;
 
+    @ManyToOne
+    @JoinTable(name="user_role", joinColumns = @JoinColumn(name = "users_userId"),
+            inverseJoinColumns = @JoinColumn(name = "roles_roleId"))
+    private RoleEntity role;
+
     @OneToMany(orphanRemoval=true)
     @JoinTable(name="users_addresses", joinColumns = @JoinColumn(name = "users_userId"),
             inverseJoinColumns = @JoinColumn(name = "addresses_addressId"))

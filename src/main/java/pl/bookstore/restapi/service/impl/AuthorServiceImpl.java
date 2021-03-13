@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.bookstore.restapi.commons.exception.AuthorNotFoundException;
+import pl.bookstore.restapi.mapper.AuthorMapper;
 import pl.bookstore.restapi.model.AuthorEntity;
+import pl.bookstore.restapi.model.dto.AuthorDto;
 import pl.bookstore.restapi.repository.AuthorRepository;
 import pl.bookstore.restapi.service.AuthorService;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
 
     @Override
     public List<AuthorEntity> getAllAuthors() {
@@ -32,17 +35,18 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorEntity addAuthor(AuthorEntity authorEntity) {
+    public AuthorEntity addAuthor(AuthorDto authorDto) {
+        AuthorEntity authorEntity = authorMapper.toEntity(authorDto);
         return authorRepository.save(authorEntity);
     }
 
     @Override
-    public Optional<AuthorEntity> updateAuthor(AuthorEntity authorEntity,long authorId) {
+    public Optional<AuthorEntity> updateAuthor(AuthorDto authorDto,long authorId) {
         return Optional.of(authorRepository.findById(authorId)
                 .map(author -> {
-                    author.setFirstName(authorEntity.getFirstName());
-                    author.setLastName(authorEntity.getLastName());
-                    author.setBiography(authorEntity.getBiography());
+                    author.setFirstName(authorDto.getFirstName());
+                    author.setLastName(authorDto.getLastName());
+                    author.setBiography(authorDto.getBiography());
                     return authorRepository.save(author);
                 })
                 .orElseThrow(() -> new AuthorNotFoundException(authorId)));

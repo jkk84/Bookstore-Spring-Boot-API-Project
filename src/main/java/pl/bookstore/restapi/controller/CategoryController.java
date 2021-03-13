@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.bookstore.restapi.model.CategoryEntity;
+import pl.bookstore.restapi.model.dto.CategoryDto;
 import pl.bookstore.restapi.service.CategoryService;
 
 import java.util.List;
@@ -29,14 +30,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryEntity> addCategory(@RequestBody CategoryEntity categoryEntity) {
-        return ResponseEntity.ok(categoryService.addCategory(categoryEntity));
+    public ResponseEntity<CategoryEntity> addCategory(@RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.ok(categoryService.addCategory(categoryDto));
     }
 
     @PutMapping
     public ResponseEntity<CategoryEntity> updateCategory
-            (@RequestBody CategoryEntity categoryEntity, @RequestParam long categoryId) {
-        return categoryService.updateCategory(categoryEntity, categoryId)
+            (@RequestBody CategoryDto categoryDto, @RequestParam long categoryId) {
+        return categoryService.updateCategory(categoryDto, categoryId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

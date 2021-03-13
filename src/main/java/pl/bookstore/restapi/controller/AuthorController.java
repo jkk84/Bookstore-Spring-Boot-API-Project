@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.bookstore.restapi.model.AuthorEntity;
+import pl.bookstore.restapi.model.dto.AuthorDto;
 import pl.bookstore.restapi.service.AuthorService;
 
 import java.util.List;
@@ -29,14 +30,14 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<AuthorEntity> addAuthor(@RequestBody AuthorEntity authorEntity) {
-        return ResponseEntity.ok(authorService.addAuthor(authorEntity));
+    public ResponseEntity<AuthorEntity> addAuthor(@RequestBody AuthorDto authorDto) {
+        return ResponseEntity.ok(authorService.addAuthor(authorDto));
     }
 
     @PutMapping
     public ResponseEntity<AuthorEntity> updateAuthor
-            (@RequestBody AuthorEntity authorEntity, @RequestParam long authorId) {
-        return authorService.updateAuthor(authorEntity, authorId)
+            (@RequestBody AuthorDto authorDto, @RequestParam long authorId) {
+        return authorService.updateAuthor(authorDto, authorId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

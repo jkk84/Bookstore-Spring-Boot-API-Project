@@ -3,6 +3,7 @@ package pl.bookstore.restapi.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -42,7 +43,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/auth/**").permitAll()
                     .antMatchers("/h2-console/**").permitAll()
-                .anyRequest().authenticated();
+                    .antMatchers("/swagger-ui.html").permitAll()
+                    .antMatchers("/v2/api-docs").permitAll()
+                    .antMatchers("/webjars/**").permitAll()
+                    .antMatchers("/swagger-resources/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/books/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/authors/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .headers().frameOptions().disable(); // h2 visibility
     }
 
     CorsConfigurationSource corsConfigurationSource() {
@@ -51,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("*");
         configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
         return source;
