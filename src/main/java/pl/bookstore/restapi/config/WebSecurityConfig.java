@@ -40,8 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
+                    .antMatchers("/auth/**").permitAll()
+                    .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
     }
 

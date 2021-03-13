@@ -12,7 +12,7 @@ public interface ReviewService {
 
     List<ReviewDto> getBookReviews(long bookId);
 
-    List<ReviewDto> getCustomerReviews(String login);
+    List<ReviewDto> getUserReviews(String login);
 
     List<ReviewDto> getLatestFiveReviews();
 

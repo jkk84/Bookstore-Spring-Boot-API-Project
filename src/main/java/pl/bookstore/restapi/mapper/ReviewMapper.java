@@ -3,11 +3,11 @@ package pl.bookstore.restapi.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.bookstore.restapi.commons.exception.BookNotFoundException;
-import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.model.ReviewEntity;
 import pl.bookstore.restapi.model.dto.ReviewDto;
 import pl.bookstore.restapi.repository.BookRepository;
-import pl.bookstore.restapi.repository.CustomerRepository;
+import pl.bookstore.restapi.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewMapper {
 
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final BookRepository bookRepository;
 
     public List<ReviewDto> toDtos(List<ReviewEntity> allReviews) {
@@ -27,7 +27,7 @@ public class ReviewMapper {
     }
 
     public ReviewDto toDto(ReviewEntity reviewEntity) {
-        if(reviewEntity.getCustomerEntity() == null) {
+        if(reviewEntity.getUserEntity() == null) {
             return ReviewDto.builder()
                     .reviewId(reviewEntity.getReviewId())
                     .rating(reviewEntity.getRating())
@@ -41,7 +41,7 @@ public class ReviewMapper {
                     .rating(reviewEntity.getRating())
                     .comment(reviewEntity.getComment())
                     .createdAt(reviewEntity.getCreatedAt())
-                    .login(reviewEntity.getCustomerEntity().getLogin())
+                    .login(reviewEntity.getUserEntity().getLogin())
                     .bookId(reviewEntity.getBookEntity().getBookId())
                     .build();
         }
@@ -51,8 +51,8 @@ public class ReviewMapper {
         ReviewEntity reviewEntity = new ReviewEntity();
         reviewEntity.setRating(reviewDto.getRating());
         reviewEntity.setComment(reviewDto.getComment());
-        reviewEntity.setCustomerEntity(customerRepository.findByLogin(reviewDto.getLogin())
-                .orElseThrow(() -> new CustomerNotFoundException(reviewDto.getLogin())));
+        reviewEntity.setUserEntity(userRepository.findByLogin(reviewDto.getLogin())
+                .orElseThrow(() -> new UserNotFoundException(reviewDto.getLogin())));
         reviewEntity.setBookEntity(bookRepository.findById(reviewDto.getBookId())
                 .orElseThrow(() -> new BookNotFoundException(reviewDto.getBookId())));
         return reviewEntity;

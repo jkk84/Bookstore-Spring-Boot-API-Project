@@ -28,9 +28,9 @@ public class AddressController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping(params = {"customerId"})
-    public List<AddressDto> getAllCustomerAddresses(@RequestParam String login) {
-        return addressService.getAllCustomerAddresses(login);
+    @GetMapping(params = {"login"})
+    public List<AddressDto> getUserAddresses(@RequestParam String login) {
+        return addressService.getUserAddresses(login);
     }
 
     @PutMapping

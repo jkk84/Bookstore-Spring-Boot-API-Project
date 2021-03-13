@@ -2,10 +2,10 @@ package pl.bookstore.restapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.model.*;
 import pl.bookstore.restapi.model.dto.AddressDto;
-import pl.bookstore.restapi.repository.CustomerRepository;
+import pl.bookstore.restapi.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AddressMapper {
 
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
 
     public List<AddressDto> toDtos(List<AddressEntity> allAddresses) {
         return allAddresses.stream()
@@ -33,7 +33,7 @@ public class AddressMapper {
                 .state(addressEntity.getState())
                 .postalCode(addressEntity.getPostalCode())
                 .country(addressEntity.getCountry())
-                .login(addressEntity.getCustomerEntity().getLogin())
+                .login(addressEntity.getUserEntity().getLogin())
                 .build();
     }
 
@@ -46,8 +46,8 @@ public class AddressMapper {
         addressEntity.setState(addressDto.getState());
         addressEntity.setPostalCode(addressDto.getPostalCode());
         addressEntity.setCountry(addressDto.getCountry());
-        addressEntity.setCustomerEntity(customerRepository.findByLogin(addressDto.getLogin())
-                .orElseThrow(() -> new CustomerNotFoundException(addressDto.getLogin())));
+        addressEntity.setUserEntity(userRepository.findByLogin(addressDto.getLogin())
+                .orElseThrow(() -> new UserNotFoundException(addressDto.getLogin())));
         return addressEntity;
     }
 }

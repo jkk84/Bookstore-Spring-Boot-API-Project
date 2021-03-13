@@ -20,8 +20,8 @@ public class OrderMapper {
     private final BookRepository bookRepository;
     private final PurchaseRepository purchaseRepository;
 
-    public List<OrderDto> toDtos(List<OrderEntity> allCustomerOrders) {
-        return allCustomerOrders.stream()
+    public List<OrderDto> toDtos(List<OrderEntity> allUserOrders) {
+        return allUserOrders.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }

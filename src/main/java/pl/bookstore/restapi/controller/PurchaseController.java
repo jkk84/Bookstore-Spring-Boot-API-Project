@@ -20,8 +20,8 @@ public class PurchaseController {
     }
 
     @GetMapping
-    public ResponseEntity<PurchaseDto> getCustomerPurchase(@RequestParam String login) {
-        return purchaseService.getCustomerPurchase(login)
+    public ResponseEntity<PurchaseDto> getUserPurchase(@RequestParam String login) {
+        return purchaseService.getUserPurchase(login)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

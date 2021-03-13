@@ -25,9 +25,9 @@ public class PurchaseEntity {
     private LocalDateTime createdAt;
 
     @OneToOne
-    @JoinTable(name="purchases_customers", joinColumns = @JoinColumn(name = "purchases_purchaseId"),
-            inverseJoinColumns = @JoinColumn(name = "customers_customerId"))
-    private CustomerEntity customerEntity;
+    @JoinTable(name="purchases_users", joinColumns = @JoinColumn(name = "purchases_purchaseId"),
+            inverseJoinColumns = @JoinColumn(name = "users_userId"))
+    private UserEntity userEntity;
 
     @OneToOne
     @JoinTable(name="purchases_addresses", joinColumns = @JoinColumn(name = "purchases_purchaseId"),

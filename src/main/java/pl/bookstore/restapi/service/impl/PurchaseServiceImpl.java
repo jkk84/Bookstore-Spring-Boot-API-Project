@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.bookstore.restapi.commons.exception.AddressNotFoundException;
-import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.commons.exception.PurchaseNotFoundException;
 import pl.bookstore.restapi.mapper.PurchaseMapper;
 import pl.bookstore.restapi.model.PurchaseEntity;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class PurchaseServiceImpl implements PurchaseService {
 
     private final AddressRepository addressRepository;
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final PurchaseRepository purchaseRepository;
     private final PurchaseMapper purchaseMapper;
 
@@ -32,25 +32,25 @@ public class PurchaseServiceImpl implements PurchaseService {
         String login = purchaseDto.getLogin();
         long addressId = purchaseDto.getAddressId();
 
-        if(purchaseRepository.existsByCustomerEntityLogin(login)) {
+        if(purchaseRepository.existsByUserEntityLogin(login)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase already exists.");
         }
-        if(customerRepository.existsByLoginAndAddressEntitiesAddressIdIn(login, List.of(addressId))) {
+        if(userRepository.existsByLoginAndAddressEntitiesAddressIdIn(login, List.of(addressId))) {
             purchaseRepository.save(purchaseEntity);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer or Address not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User or Address not found");
         }
         return purchaseMapper.toDto(purchaseEntity);
     }
 
     @Override
-    public Optional<PurchaseDto> getCustomerPurchase(String login) {
-        if(!customerRepository.existsByLogin(login)) {
-            throw new CustomerNotFoundException(login);
+    public Optional<PurchaseDto> getUserPurchase(String login) {
+        if(!userRepository.existsByLogin(login)) {
+            throw new UserNotFoundException(login);
         }
         try {
             return Optional.of(purchaseMapper.toDto(purchaseRepository
-                .findByCustomerEntityLogin(login)));
+                .findByUserEntityLogin(login)));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Purchase for " + login + " nor found.");
         }

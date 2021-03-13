@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bookstore.restapi.model.dto.CustomerDto;
+import pl.bookstore.restapi.model.dto.UserDto;
 import pl.bookstore.restapi.model.dto.JwtResponse;
 import pl.bookstore.restapi.model.dto.LoginRequest;
 import pl.bookstore.restapi.service.AuthService;
@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping(AUTH_REGISTER)
-    public ResponseEntity<CustomerDto> register(@RequestBody CustomerDto customerDto) {
-        return ResponseEntity.ok(authService.register(customerDto));
+    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(authService.register(userDto));
     }
 }

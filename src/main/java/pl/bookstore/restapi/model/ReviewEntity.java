@@ -27,9 +27,9 @@ public class ReviewEntity {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinTable(name="reviews_customers", joinColumns = @JoinColumn(name = "reviews_reviewId"),
-            inverseJoinColumns = @JoinColumn(name = "customers_customerId"))
-    private CustomerEntity customerEntity;
+    @JoinTable(name="reviews_users", joinColumns = @JoinColumn(name = "reviews_reviewId"),
+            inverseJoinColumns = @JoinColumn(name = "users_userId"))
+    private UserEntity userEntity;
 
     @ManyToOne
     @JoinTable(name="reviews_books", joinColumns = @JoinColumn(name = "reviews_reviewId"),

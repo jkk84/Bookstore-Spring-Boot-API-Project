@@ -14,7 +14,7 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
     List<ReviewEntity> findFirst5ByOrderByReviewIdDesc();
 
-    List<ReviewEntity> findByCustomerEntityLogin(String login);
+    List<ReviewEntity> findByUserEntityLogin(String login);
 
-    boolean existsByCustomerEntityLoginAndBookEntityBookId(String login, long bookId);
+    boolean existsByUserEntityLoginAndBookEntityBookId(String login, long bookId);
 }

@@ -8,7 +8,7 @@ import pl.bookstore.restapi.model.PurchaseEntity;
 @Repository
 public interface PurchaseRepository extends JpaRepository<PurchaseEntity, Long> {
 
-    PurchaseEntity findByCustomerEntityLogin(String login);
+    PurchaseEntity findByUserEntityLogin(String login);
 
-    boolean existsByCustomerEntityLogin(String login);
+    boolean existsByUserEntityLogin(String login);
 }

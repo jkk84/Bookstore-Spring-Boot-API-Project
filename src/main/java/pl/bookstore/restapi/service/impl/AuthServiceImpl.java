@@ -8,16 +8,16 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
-import pl.bookstore.restapi.commons.exception.CustomerAlreadyExistException;
-import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.UserAlreadyExistException;
+import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.commons.exception.InvalidLoginOrPasswordException;
 import pl.bookstore.restapi.jwt.JwtUtil;
-import pl.bookstore.restapi.mapper.CustomerMapper;
-import pl.bookstore.restapi.model.CustomerEntity;
-import pl.bookstore.restapi.model.dto.CustomerDto;
+import pl.bookstore.restapi.mapper.UserMapper;
+import pl.bookstore.restapi.model.UserEntity;
+import pl.bookstore.restapi.model.dto.UserDto;
 import pl.bookstore.restapi.model.dto.JwtResponse;
 import pl.bookstore.restapi.model.dto.LoginRequest;
-import pl.bookstore.restapi.repository.CustomerRepository;
+import pl.bookstore.restapi.repository.UserRepository;
 import pl.bookstore.restapi.service.AuthService;
 
 import javax.servlet.http.Cookie;
@@ -40,17 +40,17 @@ public class AuthServiceImpl implements AuthService {
     @Value("${jwt.refresh.token.expiration.seconds}")
     private long refreshTokenExpirationSeconds;
 
-    private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     @Override
     public JwtResponse login(LoginRequest loginRequest, HttpServletResponse httpResponse) {
         String accessToken;
-        CustomerEntity customerEntity = customerRepository.findByLogin(loginRequest.getLogin())
-                .orElseThrow(() -> new CustomerNotFoundException(loginRequest.getLogin()));
-        if (passwordEncoder.matches(loginRequest.getPassword(), customerEntity.getPassword())) {
+        UserEntity userEntity = userRepository.findByLogin(loginRequest.getLogin())
+                .orElseThrow(() -> new UserNotFoundException(loginRequest.getLogin()));
+        if (passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
             accessToken = jwtUtil.getJwtToken(loginRequest.getLogin(), TokenType.ACCESS, accessTokenExpirationSeconds);
             String refreshToken = jwtUtil.getJwtToken(loginRequest.getLogin(), TokenType.REFRESH,
                     refreshTokenExpirationSeconds);
@@ -73,13 +73,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public CustomerDto register(CustomerDto customerDto) {
-        return Optional.of(customerDto)
-                .filter(dto -> !customerRepository.existsByLogin(dto.getLogin()))
-                .map(customerMapper::toEntity)
-                .map(customerRepository::save)
-                .map(customerMapper::toDto)
-                .orElseThrow(() -> new CustomerAlreadyExistException(customerDto.getLogin()));
+    public UserDto register(UserDto userDto) {
+        return Optional.of(userDto)
+                .filter(dto -> !userRepository.existsByLogin(dto.getLogin()))
+                .map(userMapper::toEntity)
+                .map(userRepository::save)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new UserAlreadyExistException(userDto.getLogin()));
     }
 
     @Override

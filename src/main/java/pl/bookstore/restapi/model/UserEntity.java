@@ -11,15 +11,15 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "customers")
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomerEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long customerId;
+    private long userId;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -40,17 +40,17 @@ public class CustomerEntity {
     private String phone;
 
     @OneToMany(orphanRemoval=true)
-    @JoinTable(name="customers_addresses", joinColumns = @JoinColumn(name = "customers_customerId"),
+    @JoinTable(name="users_addresses", joinColumns = @JoinColumn(name = "users_userId"),
             inverseJoinColumns = @JoinColumn(name = "addresses_addressId"))
     private Set<AddressEntity> addressEntities;
 
     @OneToMany
-    @JoinTable(name="reviews_customers", joinColumns = @JoinColumn(name = "customers_customerId"),
+    @JoinTable(name="reviews_users", joinColumns = @JoinColumn(name = "users_userId"),
             inverseJoinColumns = @JoinColumn(name = "reviews_reviewId"))
     private Set<ReviewEntity> reviewEntity;
 
     @OneToOne(orphanRemoval=true)
-    @JoinTable(name="purchases_customers", joinColumns = @JoinColumn(name = "customers_customerId"),
+    @JoinTable(name="purchases_users", joinColumns = @JoinColumn(name = "users_userId"),
             inverseJoinColumns = @JoinColumn(name = "purchases_purchaseId"))
     private PurchaseEntity purchaseEntity;
 }

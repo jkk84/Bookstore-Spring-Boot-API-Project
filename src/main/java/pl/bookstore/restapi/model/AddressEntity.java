@@ -31,7 +31,7 @@ public class AddressEntity {
     private String country;
 
     @ManyToOne
-    @JoinTable(name="customers_addresses", joinColumns = @JoinColumn(name = "addresses_addressId"),
-            inverseJoinColumns = @JoinColumn(name = "customers_customerId"))
-    private CustomerEntity customerEntity;
+    @JoinTable(name="users_addresses", joinColumns = @JoinColumn(name = "addresses_addressId"),
+            inverseJoinColumns = @JoinColumn(name = "users_userId"))
+    private UserEntity userEntity;
 }

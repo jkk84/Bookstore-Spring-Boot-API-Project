@@ -9,7 +9,7 @@ public interface PurchaseService {
 
     PurchaseDto addPurchase(PurchaseDto purchaseDto);
 
-    Optional<PurchaseDto> getCustomerPurchase(String login);
+    Optional<PurchaseDto> getUserPurchase(String login);
 
     Optional<PurchaseDto> updatePurchaseAddress(PurchaseDto purchaseDto, long purchaseId);
 

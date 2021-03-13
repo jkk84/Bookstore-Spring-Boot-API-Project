@@ -1,6 +1,6 @@
 package pl.bookstore.restapi.service;
 
-import pl.bookstore.restapi.model.dto.CustomerDto;
+import pl.bookstore.restapi.model.dto.UserDto;
 import pl.bookstore.restapi.model.dto.JwtResponse;
 import pl.bookstore.restapi.model.dto.LoginRequest;
 
@@ -11,7 +11,7 @@ public interface AuthService {
 
     JwtResponse login(LoginRequest loginRequest, HttpServletResponse response);
 
-    CustomerDto register(CustomerDto customerDto);
+    UserDto register(UserDto userDto);
 
     JwtResponse refresh(HttpServletRequest response);
 

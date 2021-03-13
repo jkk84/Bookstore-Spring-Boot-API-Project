@@ -5,13 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.bookstore.restapi.commons.exception.BookNotFoundException;
-import pl.bookstore.restapi.commons.exception.CustomerNotFoundException;
+import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.commons.exception.ReviewNotFoundException;
 import pl.bookstore.restapi.mapper.ReviewMapper;
 import pl.bookstore.restapi.model.ReviewEntity;
 import pl.bookstore.restapi.model.dto.ReviewDto;
 import pl.bookstore.restapi.repository.BookRepository;
-import pl.bookstore.restapi.repository.CustomerRepository;
+import pl.bookstore.restapi.repository.UserRepository;
 import pl.bookstore.restapi.repository.ReviewRepository;
 import pl.bookstore.restapi.service.ReviewService;
 
@@ -25,13 +25,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final BookRepository bookRepository;
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final ReviewMapper reviewMapper;
 
     @Override
     public Optional<ReviewDto> addReview(ReviewDto reviewDto) {
         ReviewEntity reviewEntity = reviewMapper.toEntity(reviewDto);
-        if(reviewRepository.existsByCustomerEntityLoginAndBookEntityBookId
+        if(reviewRepository.existsByUserEntityLoginAndBookEntityBookId
                     (reviewDto.getLogin(), reviewDto.getBookId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Review already written.");
         }
@@ -48,11 +48,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> getCustomerReviews(String login) {
-        if(!customerRepository.existsByLogin(login)) {
-            throw new CustomerNotFoundException(login);
+    public List<ReviewDto> getUserReviews(String login) {
+        if(!userRepository.existsByLogin(login)) {
+            throw new UserNotFoundException(login);
         }
-        return reviewMapper.toDtos(reviewRepository.findByCustomerEntityLogin(login));
+        return reviewMapper.toDtos(reviewRepository.findByUserEntityLogin(login));
     }
 
     @Override
