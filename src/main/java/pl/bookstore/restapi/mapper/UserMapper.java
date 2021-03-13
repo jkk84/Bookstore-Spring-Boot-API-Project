@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.bookstore.restapi.model.UserEntity;
 import pl.bookstore.restapi.model.dto.UserDto;
+import pl.bookstore.restapi.repository.RoleRepository;
 
 
 @Component
@@ -12,6 +13,7 @@ import pl.bookstore.restapi.model.dto.UserDto;
 public class UserMapper {
 
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     public UserDto toDto(UserEntity userEntity) {
         return UserDto.builder()
@@ -21,6 +23,7 @@ public class UserMapper {
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
                 .phone(userEntity.getPhone())
+                .role(userEntity.getRole().getName())
                 .build();
     }
 
@@ -32,6 +35,7 @@ public class UserMapper {
         userEntity.setFirstName(userDto.getFirstName());
         userEntity.setLastName(userDto.getLastName());
         userEntity.setPhone(userDto.getPhone());
+        userEntity.setRole(roleRepository.findByName(userDto.getRole()));
         return userEntity;
     }
 }

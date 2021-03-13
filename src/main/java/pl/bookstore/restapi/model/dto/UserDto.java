@@ -27,4 +27,6 @@ public class UserDto {
     private String lastName;
 
     private String phone;
+
+    private String role;
 }
