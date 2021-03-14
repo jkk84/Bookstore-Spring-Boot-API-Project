@@ -3,9 +3,13 @@ package pl.bookstore.restapi.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import pl.bookstore.restapi.model.RoleEntity;
 import pl.bookstore.restapi.model.UserEntity;
 import pl.bookstore.restapi.model.dto.UserDto;
 import pl.bookstore.restapi.repository.RoleRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -23,7 +27,8 @@ public class UserMapper {
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
                 .phone(userEntity.getPhone())
-                .role(userEntity.getRole().getName())
+                .roles(userEntity.getRoleEntities().stream()
+                        .map(RoleEntity::getName).collect(Collectors.toList()))
                 .build();
     }
 
@@ -35,7 +40,8 @@ public class UserMapper {
         userEntity.setFirstName(userDto.getFirstName());
         userEntity.setLastName(userDto.getLastName());
         userEntity.setPhone(userDto.getPhone());
-        userEntity.setRole(roleRepository.findByName(userDto.getRole()));
+        List<RoleEntity> roleEntities = roleRepository.findAllByNameIn(userDto.getRoles());
+        userEntity.setRoleEntities(roleEntities);
         return userEntity;
     }
 }

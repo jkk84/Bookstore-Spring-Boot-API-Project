@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -28,5 +29,5 @@ public class UserDto {
 
     private String phone;
 
-    private String role;
+    private List<String> roles;
 }

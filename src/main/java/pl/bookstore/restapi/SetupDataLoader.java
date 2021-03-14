@@ -11,6 +11,7 @@ import pl.bookstore.restapi.repository.RoleRepository;
 import pl.bookstore.restapi.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -31,12 +32,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (alreadySetup) return;
 
-        createRoleIfNotFound("ADMIN");
-        createRoleIfNotFound("MANAGER");
-        createRoleIfNotFound("EMPLOYEE");
-        createRoleIfNotFound("CUSTOMER");
+        createRoleIfNotFound("ROLE_ADMIN");
+        createRoleIfNotFound("ROLE_MANAGER");
+        createRoleIfNotFound("ROLE_EMPLOYEE");
+        createRoleIfNotFound("ROLE_CUSTOMER");
 
-        RoleEntity adminRole = roleRepository.findByName("ADMIN");
+        RoleEntity adminRole = roleRepository.findByName("ROLE_ADMIN");
         UserEntity admin = new UserEntity();
         admin.setEmail("admin@gmail.com");
         admin.setLogin("admin");
@@ -44,7 +45,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         admin.setFirstName("John");
         admin.setLastName("Smith");
         admin.setPhone("123456789");
-        admin.setRole(adminRole);
+        admin.setRoleEntities(List.of(adminRole));
         userRepository.save(admin);
     }
 

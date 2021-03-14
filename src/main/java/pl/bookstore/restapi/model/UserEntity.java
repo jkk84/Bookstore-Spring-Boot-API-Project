@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 
@@ -39,10 +40,10 @@ public class UserEntity {
 
     private String phone;
 
-    @ManyToOne
-    @JoinTable(name="user_role", joinColumns = @JoinColumn(name = "users_userId"),
+    @ManyToMany
+    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "users_userId"),
             inverseJoinColumns = @JoinColumn(name = "roles_roleId"))
-    private RoleEntity role;
+    private List<RoleEntity> roleEntities;
 
     @OneToMany(orphanRemoval=true)
     @JoinTable(name="users_addresses", joinColumns = @JoinColumn(name = "users_userId"),

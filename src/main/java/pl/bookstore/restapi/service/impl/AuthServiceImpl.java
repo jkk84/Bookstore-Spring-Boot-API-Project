@@ -1,6 +1,5 @@
 package pl.bookstore.restapi.service.impl;
 
-import pl.bookstore.restapi.commons.enums.TokenType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -8,15 +7,16 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
+import pl.bookstore.restapi.commons.enums.TokenType;
+import pl.bookstore.restapi.commons.exception.InvalidLoginOrPasswordException;
 import pl.bookstore.restapi.commons.exception.UserAlreadyExistException;
 import pl.bookstore.restapi.commons.exception.UserNotFoundException;
-import pl.bookstore.restapi.commons.exception.InvalidLoginOrPasswordException;
 import pl.bookstore.restapi.jwt.JwtUtil;
 import pl.bookstore.restapi.mapper.UserMapper;
 import pl.bookstore.restapi.model.UserEntity;
-import pl.bookstore.restapi.model.dto.UserDto;
 import pl.bookstore.restapi.model.dto.JwtResponse;
 import pl.bookstore.restapi.model.dto.LoginRequest;
+import pl.bookstore.restapi.model.dto.UserDto;
 import pl.bookstore.restapi.repository.UserRepository;
 import pl.bookstore.restapi.service.AuthService;
 
@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static pl.bookstore.restapi.commons.Requests.AUTH_REFRESH;
 import static org.apache.logging.log4j.util.Strings.EMPTY;
+import static pl.bookstore.restapi.commons.Requests.AUTH_REFRESH;
 
 @Service
 @RequiredArgsConstructor
@@ -50,11 +50,12 @@ public class AuthServiceImpl implements AuthService {
         String accessToken;
         UserEntity userEntity = userRepository.findByLogin(loginRequest.getLogin())
                 .orElseThrow(() -> new UserNotFoundException(loginRequest.getLogin()));
+        UserDto userDto = userMapper.toDto(userEntity);
         if (passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
-            accessToken = jwtUtil.getJwtToken(loginRequest.getLogin(), TokenType.ACCESS, accessTokenExpirationSeconds);
-            String refreshToken = jwtUtil.getJwtToken(loginRequest.getLogin(), TokenType.REFRESH,
+            accessToken = jwtUtil.getJwtToken(loginRequest.getLogin(), userDto.getRoles(), TokenType.ACCESS, accessTokenExpirationSeconds);
+            String refreshToken = jwtUtil.getJwtToken(loginRequest.getLogin(), userDto.getRoles(), TokenType.REFRESH,
                     refreshTokenExpirationSeconds);
-            String logoutRefreshToken = jwtUtil.getJwtToken(loginRequest.getLogin(), TokenType.LOGOUT_REFRESH,
+            String logoutRefreshToken = jwtUtil.getJwtToken(loginRequest.getLogin(), userDto.getRoles(), TokenType.LOGOUT_REFRESH,
                     refreshTokenExpirationSeconds);
             httpResponse.addHeader(HttpHeaders.SET_COOKIE, getRefreshTokenCookie(refreshToken).toString());
             httpResponse.addHeader(HttpHeaders.SET_COOKIE, getLogoutRefreshTokenCookie(logoutRefreshToken).toString());

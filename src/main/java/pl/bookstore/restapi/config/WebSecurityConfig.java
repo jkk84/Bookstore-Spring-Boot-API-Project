@@ -15,6 +15,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.bookstore.restapi.config.filter.JwtAuthenticationFilter;
 
+import static pl.bookstore.restapi.commons.enums.RoleType.*;
+
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -41,15 +43,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/auth/**").permitAll()
-                    .antMatchers("/h2-console/**").permitAll()
-                    .antMatchers("/swagger-ui.html").permitAll()
-                    .antMatchers("/v2/api-docs").permitAll()
-                    .antMatchers("/webjars/**").permitAll()
-                    .antMatchers("/swagger-resources/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/books/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/authors/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/books/**").permitAll()
+                .antMatchers( "/books/**").hasRole(ADMIN)
+                .antMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                .antMatchers( "/categories/**").hasRole(ADMIN)
+                .antMatchers(HttpMethod.GET, "/authors/**").permitAll()
+                .antMatchers( "/authors/**").hasRole(ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable(); // h2 visibility
