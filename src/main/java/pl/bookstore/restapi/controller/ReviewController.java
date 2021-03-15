@@ -2,6 +2,7 @@ package pl.bookstore.restapi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.bookstore.restapi.model.dto.ReviewDto;
 import pl.bookstore.restapi.service.ReviewService;
@@ -17,8 +18,9 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<ReviewDto> addReview(@RequestBody ReviewDto reviewDto) {
-        return reviewService.addReview(reviewDto)
+    public ResponseEntity<ReviewDto> addReview(@RequestBody ReviewDto reviewDto,
+                                               @AuthenticationPrincipal String login) {
+        return reviewService.addReview(reviewDto, login)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().build());
     }

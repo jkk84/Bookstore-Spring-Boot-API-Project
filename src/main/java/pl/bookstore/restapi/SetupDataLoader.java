@@ -37,7 +37,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createRoleIfNotFound("ROLE_EMPLOYEE");
         createRoleIfNotFound("ROLE_CUSTOMER");
 
-        RoleEntity adminRole = roleRepository.findByName("ROLE_ADMIN");
+        List<RoleEntity> adminRole = roleRepository.findAllByNameIn(List.of("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_EMPLOYEE", "ROLE_CUSTOMER"));
         UserEntity admin = new UserEntity();
         admin.setEmail("admin@gmail.com");
         admin.setLogin("admin");
@@ -45,7 +45,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         admin.setFirstName("John");
         admin.setLastName("Smith");
         admin.setPhone("123456789");
-        admin.setRoleEntities(List.of(adminRole));
+        admin.setRoleEntities(adminRole);
         userRepository.save(admin);
     }
 

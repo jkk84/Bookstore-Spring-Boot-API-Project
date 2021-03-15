@@ -5,14 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.bookstore.restapi.commons.exception.BookNotFoundException;
-import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.commons.exception.ReviewNotFoundException;
+import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.mapper.ReviewMapper;
 import pl.bookstore.restapi.model.ReviewEntity;
 import pl.bookstore.restapi.model.dto.ReviewDto;
 import pl.bookstore.restapi.repository.BookRepository;
-import pl.bookstore.restapi.repository.UserRepository;
 import pl.bookstore.restapi.repository.ReviewRepository;
+import pl.bookstore.restapi.repository.UserRepository;
 import pl.bookstore.restapi.service.ReviewService;
 
 import java.util.List;
@@ -29,7 +29,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewMapper reviewMapper;
 
     @Override
-    public Optional<ReviewDto> addReview(ReviewDto reviewDto) {
+    public Optional<ReviewDto> addReview(ReviewDto reviewDto, String login) {
+        reviewDto.setLogin(login);
         ReviewEntity reviewEntity = reviewMapper.toEntity(reviewDto);
         if(reviewRepository.existsByUserEntityLoginAndBookEntityBookId
                     (reviewDto.getLogin(), reviewDto.getBookId())) {

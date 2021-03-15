@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ReviewService {
 
-    Optional<ReviewDto> addReview(ReviewDto reviewDto);
+    Optional<ReviewDto> addReview(ReviewDto reviewDto, String login);
 
     List<ReviewDto> getBookReviews(long bookId);
 

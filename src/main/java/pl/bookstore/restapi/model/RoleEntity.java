@@ -1,17 +1,16 @@
 package pl.bookstore.restapi.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "roles")
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class RoleEntity {
 
     @Id
@@ -20,10 +19,10 @@ public class RoleEntity {
 
     private String name;
 
-    @ManyToMany
-    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "roles_roleId"),
-            inverseJoinColumns = @JoinColumn(name = "users_userId"))
-    private List<UserEntity> userEntities;
+//    @ManyToMany
+//    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "roles_roleId"),
+//            inverseJoinColumns = @JoinColumn(name = "users_userId"))
+//    private List<UserEntity> userEntities;
 
     public RoleEntity(String name) {
         this.name = name;

@@ -3,7 +3,6 @@ package pl.bookstore.restapi.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +14,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.bookstore.restapi.config.filter.JwtAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static pl.bookstore.restapi.commons.enums.RoleType.*;
 
 @Configuration
@@ -49,12 +50,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/books/**").permitAll()
-                .antMatchers( "/books/**").hasRole(ADMIN)
-                .antMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                .antMatchers( "/categories/**").hasRole(ADMIN)
-                .antMatchers(HttpMethod.GET, "/authors/**").permitAll()
-                .antMatchers( "/authors/**").hasRole(ADMIN)
+
+                .antMatchers(GET, "/authors/**").permitAll()
+                .antMatchers( "/authors/**").hasAnyRole(ADMIN, MANAGER, EMPLOYEE)
+
+                .antMatchers(GET, "/categories/**").permitAll()
+                .antMatchers( "/categories/**").hasAnyRole(ADMIN, MANAGER, EMPLOYEE)
+
+                .antMatchers(GET, "/books/**").permitAll()
+                .antMatchers( "/books/**").hasAnyRole(ADMIN, MANAGER, EMPLOYEE)
+
+                .antMatchers(GET, "/reviews/**").permitAll()
+                .antMatchers(POST, "/reviews/**").permitAll()
+                .antMatchers( "/reviews/**").hasAnyRole(ADMIN, MANAGER, EMPLOYEE)
+
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable(); // h2 visibility

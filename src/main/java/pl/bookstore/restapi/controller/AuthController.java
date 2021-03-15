@@ -2,6 +2,7 @@ package pl.bookstore.restapi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,8 @@ public class AuthController {
     }
 
     @PostMapping(AUTH_REGISTER)
-    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(authService.register(userDto));
+    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto,
+                                            @AuthenticationPrincipal String login) {
+        return ResponseEntity.ok(authService.register(userDto, login));
     }
 }
