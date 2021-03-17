@@ -2,8 +2,8 @@ package pl.bookstore.restapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bookstore.restapi.commons.exception.UserNotFoundException;
-import pl.bookstore.restapi.model.*;
+import pl.bookstore.restapi.model.AddressEntity;
+import pl.bookstore.restapi.model.dto.AddressAddDto;
 import pl.bookstore.restapi.model.dto.AddressDto;
 import pl.bookstore.restapi.repository.UserRepository;
 
@@ -37,7 +37,7 @@ public class AddressMapper {
                 .build();
     }
 
-    public AddressEntity toEntity(AddressDto addressDto) {
+    public AddressEntity toEntity(AddressAddDto addressDto) {
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setAddressLine1(addressDto.getAddressLine1());
         addressEntity.setAddressLine2(addressDto.getAddressLine2());
@@ -46,8 +46,6 @@ public class AddressMapper {
         addressEntity.setState(addressDto.getState());
         addressEntity.setPostalCode(addressDto.getPostalCode());
         addressEntity.setCountry(addressDto.getCountry());
-        addressEntity.setUserEntity(userRepository.findByLogin(addressDto.getLogin())
-                .orElseThrow(() -> new UserNotFoundException(addressDto.getLogin())));
         return addressEntity;
     }
 }

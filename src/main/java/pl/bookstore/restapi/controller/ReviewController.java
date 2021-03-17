@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pl.bookstore.restapi.commons.IsAuthenticated;
+import pl.bookstore.restapi.commons.IsStaff;
 import pl.bookstore.restapi.model.dto.ReviewDto;
 import pl.bookstore.restapi.service.ReviewService;
 
@@ -17,6 +19,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @IsAuthenticated
     @PostMapping
     public ResponseEntity<ReviewDto> addReview(@RequestBody ReviewDto reviewDto,
                                                @AuthenticationPrincipal String login) {
@@ -40,6 +43,7 @@ public class ReviewController {
         return reviewService.getLatestFiveReviews();
     }
 
+    @IsStaff
     @PutMapping
     public ResponseEntity<ReviewDto> updateReview
             (@RequestBody ReviewDto reviewDto, @RequestParam long reviewId) {
@@ -48,6 +52,7 @@ public class ReviewController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @IsStaff
     @DeleteMapping
     public void deleteReview(@RequestParam long reviewId) {
         reviewService.deleteReview(reviewId);

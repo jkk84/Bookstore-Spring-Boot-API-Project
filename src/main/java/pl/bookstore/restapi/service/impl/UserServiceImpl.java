@@ -2,9 +2,11 @@ package pl.bookstore.restapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.mapper.UserMapper;
 import pl.bookstore.restapi.model.dto.UserDto;
+import pl.bookstore.restapi.model.dto.UserUpdateDto;
 import pl.bookstore.restapi.repository.UserRepository;
 import pl.bookstore.restapi.service.UserService;
 
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> updateUser(UserDto userDto, String login) {
+    public Optional<UserDto> updateUser(UserUpdateDto userDto, String login) {
         return Optional.of(userMapper.toDto(userRepository.findByLogin(login)
             .map(user -> {
                 user.setEmail(userDto.getEmail());
@@ -38,11 +40,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String login) {
-        try {
-            userRepository.deleteByLogin(login);
-        } catch (Exception e){
-            throw new UserNotFoundException(login);
-        }
+        userRepository.deleteByLogin(login);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.WebUtils;
 import pl.bookstore.restapi.commons.enums.TokenType;
+import pl.bookstore.restapi.commons.exception.ForbiddenException;
 import pl.bookstore.restapi.commons.exception.InvalidLoginOrPasswordException;
 import pl.bookstore.restapi.commons.exception.UserNotFoundException;
 import pl.bookstore.restapi.jwt.JwtUtil;
@@ -78,35 +79,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDto register(UserDto userDto, String login) {
-        if((login.equals("anonymousUser")) && userDto.getRoles().equals(List.of(ROLE_CUSTOMER))) {
-            return Optional.of(userDto)
-                    .filter(dto -> (!userRepository.existsByLogin(dto.getLogin()) && (!userRepository.existsByEmail(dto.getEmail()))))
-                    .map(userMapper::toEntity)
-                    .map(userRepository::save)
-                    .map(userMapper::toDto)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Login or/and email already used."));
+        if((!userDto.getLogin().equals("anonymousUser")) && login.equals("anonymousUser") && userDto.getRoles().equals(List.of(ROLE_CUSTOMER))) {
+            return saveUserDto(userDto);
         } else if(login.equals("anonymousUser") || userDto.getRoles().equals(List.of(ROLE_CUSTOMER))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No Access.");
+            throw new ForbiddenException();
         } else {
             UserDto loggedUser = userMapper.toDto(userRepository.findByLogin(login)
                     .orElseThrow(() -> new UserNotFoundException(login)));
             if ((userDto.getRoles().contains(ROLE_ADMIN) && loggedUser.getRoles().contains(ROLE_ADMIN)) ||
                     (!userDto.getRoles().contains(ROLE_ADMIN) && loggedUser.getRoles().contains(ROLE_MANAGER))) {
-                return Optional.of(userDto)
-                        .filter(dto -> (!userRepository.existsByLogin(dto.getLogin()) && (!userRepository.existsByEmail(dto.getEmail()))))
-                        .map(userMapper::toEntity)
-                        .map(userRepository::save)
-                        .map(userMapper::toDto)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Login or/and email already used."));
-            } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No Access.");
+                return saveUserDto(userDto);
+            } else throw new ForbiddenException();
         }
-
-//        return Optional.of(userDto)
-//                .filter(dto -> (!userRepository.existsByLogin(dto.getLogin()) && (!userRepository.existsByEmail(dto.getEmail()))))
-//                .map(userMapper::toEntity)
-//                .map(userRepository::save)
-//                .map(userMapper::toDto)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Login or/and email already used."));
     }
 
     @Override
@@ -134,5 +118,14 @@ public class AuthServiceImpl implements AuthService {
                 .maxAge(refreshTokenExpirationSeconds)
                 .secure(false)
                 .build();
+    }
+
+    private UserDto saveUserDto(UserDto userDto) {
+        return Optional.of(userDto)
+                .filter(dto -> (!userRepository.existsByLogin(dto.getLogin()) && (!userRepository.existsByEmail(dto.getEmail()))))
+                .map(userMapper::toEntity)
+                .map(userRepository::save)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Login or/and email already used."));
     }
 }

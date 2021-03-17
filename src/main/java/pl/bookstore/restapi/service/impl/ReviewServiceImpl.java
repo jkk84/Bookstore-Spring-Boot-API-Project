@@ -34,7 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewEntity reviewEntity = reviewMapper.toEntity(reviewDto);
         if(reviewRepository.existsByUserEntityLoginAndBookEntityBookId
                     (reviewDto.getLogin(), reviewDto.getBookId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Review already written.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Review already written.");
         }
         reviewRepository.save(reviewEntity);
         return Optional.of(reviewMapper.toDto(reviewEntity));

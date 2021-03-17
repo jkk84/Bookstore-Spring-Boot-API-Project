@@ -3,6 +3,7 @@ package pl.bookstore.restapi.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.bookstore.restapi.commons.IsStaff;
 import pl.bookstore.restapi.model.dto.BookDto;
 import pl.bookstore.restapi.service.BookService;
 
@@ -33,6 +34,7 @@ public class BookController {
         return bookService.getBooksByAuthorsAndCategories(authorIds, categoryIds);
     }
 
+    @IsStaff
     @PostMapping
     public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
         return bookService.addBook(bookDto)
@@ -40,6 +42,7 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @IsStaff
     @PutMapping
     public ResponseEntity<BookDto> updateBook
             (@RequestBody BookDto bookDto, @RequestParam long bookId) {
@@ -48,6 +51,7 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @IsStaff
     @DeleteMapping
     public void deleteBook(@RequestParam long bookId) {
         bookService.deleteBook(bookId);
