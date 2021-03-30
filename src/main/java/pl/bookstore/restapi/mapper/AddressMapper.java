@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import pl.bookstore.restapi.model.AddressEntity;
 import pl.bookstore.restapi.model.dto.AddressAddDto;
 import pl.bookstore.restapi.model.dto.AddressDto;
-import pl.bookstore.restapi.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,8 +13,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AddressMapper {
-
-    private final UserRepository userRepository;
 
     public List<AddressDto> toDtos(List<AddressEntity> allAddresses) {
         return allAddresses.stream()
